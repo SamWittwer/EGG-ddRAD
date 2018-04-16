@@ -1,0 +1,6 @@
+ABLE/testdata/allsites_GATK3_subset50klines.vcf
+ABLE/testdata/old/TESTDATA.vcf
+ABLE/testdata/old/TESTDATA_popfile.txt
+ABLE/venv/*
+ABLE/.idea/*
+*.vcf
