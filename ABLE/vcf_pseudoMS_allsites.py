@@ -1,48 +1,52 @@
 import sys
 
 #### settings
-# TODO: sys.argv
+# TODO: get arguments from sys.argv
 
-
-block = 200
+blocklength = 200
 maxmissperblock = 0.05  # max % missing data per block
 nindperpop = 2  # number of individuals to sample per population
 
-vcfname = 'testdata\\subset.vcf'
-outfilename = str(block) + '.pseudo_MS'
-popfilename = 'testdata\\allsites_GATK3_subset50klines_popnames.popfile'
-poporderfile = 'testdata\\poporder.txt'
+filebasename = 'testdata\\TESTINDS'
+vcfname = filebasename + '.vcf'
+outfilename = filebasename + '_' + str(blocklength) + '.pseudo_MS'
+popfilename = filebasename + '_popfile.txt'
+poporderfile = filebasename + '_poporder.txt'
+verbose = True
 
 positioninfo = 'CHROMPOS'  # either CHROMPOS or ID
 ID_sep = '_'  # character to split SNP ID by
 
 
-def printsterr(text, type='INFO'):
-    if type == 'INFO':
+def printsterr(text, type='INFO', v=verbose):
+    if type == 'INFO' and v:
         textcolor = '\033[01;32m'
         prefix = '[ OK ] '
-    elif type == 'WARN':
+        outtext = prefix + text + '\n'
+        sys.stderr.write(textcolor + outtext)
+    if type == 'WARN':
         textcolor = '\033[01;31m'
         prefix = '[WARN] '
-    outtext = prefix + text + '\n'
-    sys.stderr.write(textcolor + outtext)
+        sys.exit(1)
+        outtext = prefix + text + '\n'
+        sys.stderr.write(textcolor + outtext)
 
 
 def readpopfile(pop):
-    """reads a pop file with col 1 = Sample and col 2 = pop name"""
+    """reads a tab delimited pop file with col 1 = Sample and col 2 = pop name"""
     printsterr('Reading file {}'.format(pop), 'INFO')
     try:
         with open(pop, 'r') as pf:
             indpopdict = {}
             for line in pf:
-                if len(line.strip()) > 0:
+                if len(line.strip()) > 0 and not line.startswith('#'):
                     indpopdict[line.split('\t')[0]] = line.strip().split('\t')[1]
             printsterr('Population file read. There are {} populations'.format(len(set(indpopdict.values()))), 'INFO')
             printsterr('Populations are: {}'.format(', '.join(set(indpopdict.values()))))
             return indpopdict
     except IOError:
         printsterr('File {} not found. Exiting.'.format(pop), 'WARN')
-        sys.exit(1)
+
 
 def getindexfromvcfheader(vcffilepath):
     """returns a dict of {individual: indexes} to account for possibility of non-alphabetic sample order in vcf file"""
@@ -51,24 +55,26 @@ def getindexfromvcfheader(vcffilepath):
             for x in infile:
                 if x.startswith('#CHROM'):
                     headerlist = x[1:].strip().split('\t')
-                    indexdict = {k: v + 9 for (v, k) in enumerate(headerlist[9:])}
+                    #indexdict {individual: position(no offset)}
+                    indexdict = {k: v for (v, k) in enumerate(headerlist[9:])}
                     printsterr('Extracting indexes of samples from vcf header: {} samples'.format(len(indexdict)))
                     break
     except IOError:
         printsterr('File {} not found! Exiting.'.format(vcffilepath), 'WARN')
-        sys.exit(1)
     return indexdict
 
 
 def orderindividuals(popdict, indexes, poporderfile):
     """takes populations, indexes of inds and desired order of pops, returns list of indexes of individuals"""
-    # read custom order for population from file
+
+    # read custom order for population from file, ignore empty lines and lines starting with #
     try:
         with open(poporderfile, 'r') as infile:
-            poporderlist = [l.strip() for l in infile]
+            poporderlist = [l.strip() for l in infile if len(l.strip()) > 0 and not l.startswith('#')]
     except IOError:
         printsterr('File {} not found! Exiting.'.format(poporderfile), 'WARN')
     printsterr('Desired order of populations is {}'.format(' '.join(poporderlist)))
+
     # create a list in which individuals from each population are a separate dict. Order of list is the order
     # defined in the poporderfile
     dictperpop = [{k: v for (k, v) in popdict.items() if v == listitem} for listitem in poporderlist]
@@ -83,119 +89,123 @@ def orderindividuals(popdict, indexes, poporderfile):
     # taken from https://stackoverflow.com/questions/952914/making-a-flat-list-out-of-list-of-lists-in-python
     # to be used when reading in the vcf file later
     flatten = lambda l: [item[1] for sublist in l for item in sublist]
-    # printsterr('Indexes of individuals in correct order: {}'.format(flatten(LOLtuplesperpop)))
+    printsterr('Indexes of individuals in correct order: {}'.format(flatten(LOLtuplesperpop)))
 
     return flatten(LOLtuplesperpop)
 
 
-def process_vcf():
+def process_vcf(vcffilepath, individualorder):
+    """goes through vcf line by line and produces a list of lists with tuples of coordinates and called bases"""
+    result = []
+    try:
+        with open(vcffilepath, 'r') as infile:
+            blocklist = []
+            i = 0
+            for line in infile:
+                #skip header
+                if not line.startswith('#'):
+                    vcflinelist = line.strip().split('\t')
+
+                    #gather mapping info for current line line (0 = REF, 1 = ALT, . = N)
+                    alleledict = vcfline_mapbase(vcflinelist)
+                    allele = lambda x: alleledict[x]
+
+                    #go through individuals (linelist[9:]) and convert numbers to bases for each
+                    #(result: list with tuple per individual)
+                    individual_bases = [tuple([allele(a) for a in individual.split(':')[0].split('/')]) for individual in vcflinelist[9:]]
+
+                    #reorder individual tuples based on the population order given
+                    individuals_reordered = [individual_bases[x] for x in individualorder]
+
+                    #prepare tuple of current line
+                    currentpos = ((vcflinelist[0], int(vcflinelist[1])),individuals_reordered)
+
+                    if len(blocklist) == 0:
+                        printsterr('first block: {}'.format(currentpos[0]))
+                        blocklist.append(currentpos)
+                    else:
+                        if current_belongstoblock(blocklist, currentpos):
+                            blocklist.append(currentpos)
+                        else:
+                            #not part of the same block!
+                            result.append(blocklist)
+                            printsterr('no more sites in current block (nsites {}), new block starting at {}'.format(len(blocklist), currentpos[0]))
+                            #print '*************BLOCK END'
+                            #print currentpos
+                            blocklist = []
+                            blocklist.append(currentpos)
+                    i = i + 1
+            result.append(blocklist)
+            printsterr('nsites in last block: {}'.format(len(blocklist)))
+            printsterr('Number of blocks: {}'.format(len(result)))
+            return result
+    except IOError:
+        printsterr('File {} not found! Exiting.'.format(poporderfile), 'WARN')
+
+
+def current_belongstoblock(blocklist, currentposition, l = blocklength):
+    """Takes the current block list and checks if current line is part of block (True) or new block (False)"""
+    if blocklist[0][0][0]==currentposition[0][0]:
+        if currentposition[0][1] - blocklist[0][0][1] <= l:
+            # The two positions are on the same CHR and difference is equal or less block length l -> True
+            #print '{} {} SAME BLOCK {} {}'.format(blocklist[0][0][0], blocklist[0][0][1], currentposition[0][0], currentposition[0][1])
+            return True
+        else:
+            # The two positions are on the same CHR but out of block length -> False
+            #print '{} {} NEW BLOCK {} {}'.format(blocklist[0][0][0], blocklist[0][0][1], currentposition[0][0], currentposition[0][1])
+            return False
+    else:
+        # the two positions are not on the same CHR -> False
+        return False
+
+
+def vcfline_mapbase(vcfline):
+    """Takes list of vcf line and returns dict to translate numbers of individuals to bases
+
+    ONLY WORKS FOR BIALLELIC ATM
+    """
+    if vcfline[4] == '.':
+        x = {'0': vcfline[3], '.': 'N'}
+    else:
+        x = {'0': vcfline[3], '1': vcfline[4], '.': 'N'}
+    return x
+
+
+def fillupblock(blocklist, blocklen = blocklength):
+    """takes block and fills up gaps within and at end with N per individual"""
     # TODO: implement this function
+    print blocklen
+    print 'filling up blocks'
     pass
 
-
-def write_pseudoMS():
+def create_pseudoMSblock(blocklist):
+    """takes final block, generates blockname and creates string to write out to pseudo_MS file"""
     # TODO: implement this function
+    print 'creating pseudoMS'
+    fillupblock(blocklist)
     pass
 
 
 def write_ABLEconfig():
+    """initializes ABLE config file to convert pseudo_MS file to cbSFS"""
     # TODO: implement this function
     pass
-
-
-def process_vcf(vcfname, popfilename):
-    """ Process an entire vcf file. Skip header lines starting with ##, extract individuals when line
-        starts with #CHROM, get permutation list.
-
-        returns a dictionary. Keys are CHR entries, contains a list of tuples per key. In tuples: 0 = POS, 1 = list of genotypes (reordered)
-    """
-    dict_vcflines = {}
-    try:
-        with open(vcfname) as vcf:
-            for line in vcf:
-                if line.startswith('##'):
-                    # header line, not using
-                    pass
-
-                elif line.startswith('#CHROM'):
-                    # line with sample names, extracting and preparing list with permutation
-                    print '[  OK  ] Extracting sample names from vcf:', line.strip().split('\t')[9:]
-                    individual_order = read_popfilelist(popfilename)
-                    permutationlist = reorder_individuals(individual_order, line.strip().split('\t')[9:])
-
-                else:
-                    # line now contains actual genotypes. First: check if CHROM is in
-                    # dict_vcflines. Append if not. Either through CHROM+POS columns
-                    # or ID columns only (i.e. ID = 1_10, 1_15 etc. == CHR_POS)
-                    linelist = line.strip().split('\t')
-                    if positioninfo == 'CHROMPOS':
-                        if linelist[0] not in dict_vcflines:
-                            dict_vcflines[linelist[0]] = []
-                    elif positioninfo == 'ID':
-                        linelist[0] = linelist[2].split(ID_sep)[0]
-                        linelist[1] = linelist[2].split(ID_sep)[1]
-                        if linelist[0] not in dict_vcflines:
-                            dict_vcflines[linelist[0]] = []
-
-                    individualcalls_reordered = [linelist[x].split(':')[0] for x in permutationlist]
-                    alleledict = {'0': linelist[3], '1': linelist[4], '.': 'N'}
-
-                    translate = lambda x, alleles: [alleles[y] for y in
-                                                    x.split('/')]  # translates numbers from VCF to bases
-                    flatten = lambda l: [item for sublist in l for item in
-                                         sublist]  # flattens resulting List of Lists from translate
-
-                    haploid_genotypes = flatten([translate(x, alleledict) for x in
-                                                 individualcalls_reordered])  # 1 diploid ind is now 2 haploids
-                    dict_vcflines[linelist[0]].append((linelist[1],
-                                                       haploid_genotypes))  # appending a tuple with (POS, haploid_genotypes) to CHROM entry (!! gotta do this differently for ID)
-            return dict_vcflines
-
-    except IOError:
-        print '[  ER  ] File {} does not exist! exiting!'.format(vcfname)
-        sys.exit(1)
-
-
-def greedy_blockmaker(CHRNAME, list_of_SNPs, blocksize=280):
-    """Take a CHR name, a list of tuples (POS, list(genotypes)) and blocksize to build blocks"""
-
-    list_of_SNPs.sort(key=lambda tup: int(tup[0]), reverse=True)  # sort by position on CHR
-    blocks = []
-    tempblock = []
-    while (len(list_of_SNPs) > 0):
-        if len(tempblock) == 0:
-            tempblock.append(list_of_SNPs[-1])
-            list_of_SNPs.pop()
-            # print 'NEW BLOCK starting at', CHRNAME, tempblock[0][0]
-        elif int(list_of_SNPs[-1][0]) - int(tempblock[0][0]) < blocksize:
-            tempblock.append(list_of_SNPs[-1])
-            list_of_SNPs.pop()
-            # print 'SNP is in block:', CHRNAME, tempblock[-1][0]
-        else:
-            blocks.append(tempblock)
-            tempblock = [list_of_SNPs[-1]]
-            # print '======================'
-            # print 'NEW BLOCK starting at', CHRNAME, tempblock[0][0]
-            list_of_SNPs.pop()
-    blocks.append(tempblock)
-    pseudo_MS = []
-    for singleblock in blocks:
-        for i, item in enumerate(singleblock):
-            if i == 0:
-                blocksequences = item[1]
-            else:
-                for j, base in enumerate(item[1]):
-                    blocksequences[j] = blocksequences[j] + base  # this is bad... but ok for short strings
-        pseudo_MS.append('//\nBLOCK_{}_{}\n{}\n\n'.format(CHRNAME, singleblock[0][0], '\n'.join(blocksequences)))
-
-    return ''.join(pseudo_MS)
 
 
 def version2():
     popfiledict = readpopfile(popfilename)
     indindexes = getindexfromvcfheader(vcfname)
     reordered_indindexes = orderindividuals(popfiledict, indindexes, poporderfile)
+    #print reordered_indindexes
+    #print indindexes
+    processed_vcf = process_vcf(vcfname, reordered_indindexes)
+    for item in processed_vcf:
+        print item
 
+    pseudoMS = create_pseudoMSblock(processed_vcf)
+
+    #TODO: CURRENT go through processed vcf (list of blocks with tuples for coords [0] and sequence [1]
+    #
 
 version2()
 
