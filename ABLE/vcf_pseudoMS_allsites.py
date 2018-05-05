@@ -106,32 +106,32 @@ def process_vcf(vcffilepath, individualorder):
                 if not line.startswith('#'):
                     vcflinelist = line.strip().split('\t')
 
-                    #gather mapping info for current line line (0 = REF, 1 = ALT, . = N)
+                    # gather mapping info for current line line (0 = REF, 1 = ALT, . = N)
                     alleledict = vcfline_mapbase(vcflinelist)
                     allele = lambda x: alleledict[x]
 
-                    #go through individuals (linelist[9:]) and convert numbers to bases for each
-                    #(result: list with tuple per individual)
+                    # go through individuals (linelist[9:]) and convert numbers to bases for each
+                    # (result: list with tuple per individual)
                     individual_bases = [tuple([allele(a) for a in individual.split(':')[0].split('/')]) for individual in vcflinelist[9:]]
 
-                    #reorder individual tuples based on the population order given
+                    # reorder individual tuples based on the population order given
                     individuals_reordered = [individual_bases[x] for x in individualorder]
 
-                    #prepare tuple of current line
+                    # prepare tuple of current line
                     currentpos = ((vcflinelist[0], int(vcflinelist[1])),individuals_reordered)
 
                     if len(blocklist) == 0:
+                        # start first block
                         printsterr('first block: {}'.format(currentpos[0]))
                         blocklist.append(currentpos)
                     else:
                         if current_belongstoblock(blocklist, currentpos):
+                            # if currentpos in block -> append and continue
                             blocklist.append(currentpos)
                         else:
-                            #not part of the same block!
+                            # if currentpos not in block -> append current block to result and start new block
                             result.append(blocklist)
                             printsterr('no more sites in current block (nsites {}), new block starting at {}'.format(len(blocklist), currentpos[0]))
-                            #print '*************BLOCK END'
-                            #print currentpos
                             blocklist = []
                             blocklist.append(currentpos)
                     i = i + 1
@@ -148,11 +148,9 @@ def current_belongstoblock(blocklist, currentposition, l = blocklength):
     if blocklist[0][0][0]==currentposition[0][0]:
         if currentposition[0][1] - blocklist[0][0][1] <= l:
             # The two positions are on the same CHR and difference is equal or less block length l -> True
-            #print '{} {} SAME BLOCK {} {}'.format(blocklist[0][0][0], blocklist[0][0][1], currentposition[0][0], currentposition[0][1])
             return True
         else:
             # The two positions are on the same CHR but out of block length -> False
-            #print '{} {} NEW BLOCK {} {}'.format(blocklist[0][0][0], blocklist[0][0][1], currentposition[0][0], currentposition[0][1])
             return False
     else:
         # the two positions are not on the same CHR -> False
@@ -164,6 +162,7 @@ def vcfline_mapbase(vcfline):
 
     ONLY WORKS FOR BIALLELIC ATM
     """
+    # TODO: adapt this function for multiallelic SNPs
     if vcfline[4] == '.':
         x = {'0': vcfline[3], '.': 'N'}
     else:
@@ -177,6 +176,12 @@ def fillupblock(blocklist, blocklen = blocklength):
     print blocklen
     print 'filling up blocks'
     pass
+
+def generate_blockname(blocklist_currentblock):
+    """takes list of list from block and constructs string for block name"""
+    # TODO: implement this function
+    pass
+
 
 def create_pseudoMSblock(blocklist):
     """takes final block, generates blockname and creates string to write out to pseudo_MS file"""
@@ -196,8 +201,6 @@ def version2():
     popfiledict = readpopfile(popfilename)
     indindexes = getindexfromvcfheader(vcfname)
     reordered_indindexes = orderindividuals(popfiledict, indindexes, poporderfile)
-    #print reordered_indindexes
-    #print indindexes
     processed_vcf = process_vcf(vcfname, reordered_indindexes)
     for item in processed_vcf:
         print item
