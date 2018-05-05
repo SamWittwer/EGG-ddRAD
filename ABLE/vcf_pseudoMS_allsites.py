@@ -1,4 +1,5 @@
 import sys
+from itertools import repeat
 
 #### settings
 # TODO: get arguments from sys.argv
@@ -12,7 +13,7 @@ vcfname = filebasename + '.vcf'
 outfilename = filebasename + '_' + str(blocklength) + '.pseudo_MS'
 popfilename = filebasename + '_popfile.txt'
 poporderfile = filebasename + '_poporder.txt'
-verbose = True
+verbose = False
 
 positioninfo = 'CHROMPOS'  # either CHROMPOS or ID
 ID_sep = '_'  # character to split SNP ID by
@@ -55,7 +56,7 @@ def getindexfromvcfheader(vcffilepath):
             for x in infile:
                 if x.startswith('#CHROM'):
                     headerlist = x[1:].strip().split('\t')
-                    #indexdict {individual: position(no offset)}
+                    # indexdict {individual: position(no offset)}
                     indexdict = {k: v for (v, k) in enumerate(headerlist[9:])}
                     printsterr('Extracting indexes of samples from vcf header: {} samples'.format(len(indexdict)))
                     break
@@ -172,22 +173,47 @@ def vcfline_mapbase(vcfline):
 
 def fillupblock(blocklist, blocklen = blocklength):
     """takes block and fills up gaps within and at end with N per individual"""
-    # TODO: implement this function
-    print blocklen
-    print 'filling up blocks'
-    pass
+
+    if len(blocklist) == blocklen:
+        # block already has appropriate length, return as it is.
+        return blocklist
+    else:
+        # block too short for blocklen, fill up gaps first and extend with N per ind and return
+        filledblock = []
+        for counter, entry in enumerate(blocklist):
+            if counter == 0:
+                # first entry: append to result and generate placeholder for missing data
+                filledblock.append(entry)
+                CHR = entry[0][0]
+                placeholderNs = list(repeat(('N','N'), len(entry[1])))
+            else:
+                # check if current entry is within 1 bp of last result, fill in placeholder if not
+                if entry[0][1] - filledblock[-1][0][1] == 1:
+                    filledblock.append(entry)
+                else:
+                    while entry[0][1] - filledblock[-1][0][1] > 1:
+                        filledblock.append(((CHR, filledblock[-1][0][1] + 1),placeholderNs))
+                    filledblock.append(entry)
+
+        # all gaps now filled. Fill up placeholder at the end until blocklength is reached
+        while len(filledblock) < blocklen:
+            filledblock.append(((CHR, filledblock[-1][0][1] + 1), placeholderNs))
+
+        return filledblock
+
 
 def generate_blockname(blocklist_currentblock):
     """takes list of list from block and constructs string for block name"""
-    # TODO: implement this function
-    pass
+    return 'BLOCK_{}_{}_{}'.format(blocklist_currentblock[0][0][0], blocklist_currentblock[0][0][1],
+                                   blocklist_currentblock[-1][0][1])
 
 
-def create_pseudoMSblock(blocklist):
-    """takes final block, generates blockname and creates string to write out to pseudo_MS file"""
-    # TODO: implement this function
-    print 'creating pseudoMS'
-    fillupblock(blocklist)
+def create_pseudoMSblock(blocklist_currentblock, blockname):
+    """takes final block, creates string to write out to pseudo_MS file"""
+    # TODO: THIS IS WHERE I AM RIGHT NOW
+
+    print blockname
+    print blocklist_currentblock
     pass
 
 
@@ -202,13 +228,11 @@ def version2():
     indindexes = getindexfromvcfheader(vcfname)
     reordered_indindexes = orderindividuals(popfiledict, indindexes, poporderfile)
     processed_vcf = process_vcf(vcfname, reordered_indindexes)
+
     for item in processed_vcf:
-        print item
+        create_pseudoMSblock(fillupblock(item), generate_blockname(item))
 
-    pseudoMS = create_pseudoMSblock(processed_vcf)
 
-    #TODO: CURRENT go through processed vcf (list of blocks with tuples for coords [0] and sequence [1]
-    #
 
 version2()
 
