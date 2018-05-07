@@ -2,6 +2,8 @@ import sys, getopt
 from itertools import repeat, chain
 
 #### settings
+# TODO: counter for processed blocks in process_vcf and in check blocks
+
 
 blocklength = 10
 maxmisspercentperblock = 0.90  # max % missing data per block
@@ -17,31 +19,6 @@ popfilename = filebasename + '_popfile.txt'
 poporderfile = filebasename + '_poporder.txt'
 logfilename = filebasename + '_conversionlog.txt'
 verbose = False
-
-try:
-    opts, args = getopt.getopt(sys.argv[1:], "hp:o:vl")
-except getopt.GetoptError:
-    printsterr('option not recognized! Exiting.', 'WARN')
-for opt, arg in opts:
-    if opt == '-h':
-        ## TODO: add help text
-        print 'HELP TEXT HERE'
-        sys.exit()
-    elif opt in ('-p'):
-        filebasename = arg
-        vcfname = filebasename + '.vcf'
-        outfilename = filebasename + '_' + str(blocklength) + '.pseudo_MS'
-        popfilename = filebasename + '_popfile.txt'
-        poporderfile = filebasename + '_poporder.txt'
-        logfilename = filebasename + '_conversionlog.txt'
-    elif opt in ('-v'):
-        verbose = True
-    elif opt in ('-l'):
-        blocklength = int(arg)
-    elif opt in ('-m'):
-        maxmisspercentperblock = float(arg)
-        maxmissbasesperblock = int(maxmisspercentperblock * blocklength)
-
 
 def main():
 
@@ -59,11 +36,18 @@ def main():
 
     # go through each block, fill up with N for missing and write out if missing data criterion fulfilled
     with open(outfilename, 'w') as o:
+        processedblocks = 0
+        passedblocks = 0
         for item in processed_vcf:
+            processedblocks = processedblocks + 1
             filled_block = fillupblock(item)
             block_reform = reformat_block(filled_block, generate_blockname(filled_block))
             if check_missing(block_reform):
                 o.write(create_pseudoMSstring(block_reform))
+                passedblocks = passedblocks + 1
+            if processedblocks % 1000 == 0:
+                printsterr('{} blocks processed, {} blocks fulfilling missing data criterion'.format(processedblocks, passedblocks))
+    printsterr('processing finished. {} blocks processed, {} blocks fulfilling missing data criterion'.format(processedblocks, passedblocks))
 
 
 def printsterr(text, type='INFO', v=verbose):
@@ -184,16 +168,18 @@ def process_vcf(vcffilepath, individualorder):
                         else:
                             # if currentpos not in block -> append current block to result and start new block
                             result.append(blocklist)
-                            printsterr('no more sites in current block (nsites {}), new block starting at {}'.format(len(blocklist), currentpos[0]))
+                            # printsterr('no more sites in current block (nsites {}), new block starting at {}'.format(len(blocklist), currentpos[0]))
                             blocklist = []
                             blocklist.append(currentpos)
                     i = i + 1
+                    if i % 1000 == 0:
+                        printsterr('{} blocks read from vcf file'.format(i))
             # append last block after loop has finished
             result.append(blocklist)
-
+            printsterr('reading in vcf file completed. {} blocks read'.format(i))
             # print logging messages
-            printsterr('nsites in last block: {}'.format(len(blocklist)))
-            printsterr('Number of blocks: {}'.format(len(result)))
+            # printsterr('nsites in last block: {}'.format(len(blocklist)))
+            # printsterr('Number of blocks: {}'.format(len(result)))
             return result
 
     except IOError:
