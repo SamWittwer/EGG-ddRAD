@@ -1,11 +1,12 @@
 import sys
-from itertools import repeat
+from itertools import repeat, chain
 
 #### settings
 # TODO: get arguments from sys.argv
 
 blocklength = 200
-maxmissperblock = 0.05  # max % missing data per block
+maxmisspercentperblock = 0.05  # max % missing data per block
+maxmissbasesperblock = int(maxmisspercentperblock * blocklength)
 nindperpop = 2  # number of individuals to sample per population
 
 filebasename = 'testdata\\TESTINDS'
@@ -13,6 +14,7 @@ vcfname = filebasename + '.vcf'
 outfilename = filebasename + '_' + str(blocklength) + '.pseudo_MS'
 popfilename = filebasename + '_popfile.txt'
 poporderfile = filebasename + '_poporder.txt'
+logfilename = filebasename + '_conversionlog.txt'
 verbose = False
 
 positioninfo = 'CHROMPOS'  # either CHROMPOS or ID
@@ -20,16 +22,21 @@ ID_sep = '_'  # character to split SNP ID by
 
 
 def printsterr(text, type='INFO', v=verbose):
-    if type == 'INFO' and v:
+    if type == 'INFO':
         textcolor = '\033[01;32m'
-        prefix = '[ OK ] '
+        prefix = '[INFO] '
         outtext = prefix + text + '\n'
-        sys.stderr.write(textcolor + outtext)
+        with open(logfilename, 'a') as log:
+            log.write(outtext)
+        if v:
+            sys.stderr.write(textcolor + outtext)
     if type == 'WARN':
         textcolor = '\033[01;31m'
         prefix = '[WARN] '
         sys.exit(1)
         outtext = prefix + text + '\n'
+        with open(logfilename, 'a') as log:
+            log.write(outtext)
         sys.stderr.write(textcolor + outtext)
 
 
@@ -208,14 +215,34 @@ def generate_blockname(blocklist_currentblock):
                                    blocklist_currentblock[-1][0][1])
 
 
-def create_pseudoMSblock(blocklist_currentblock, blockname):
-    """takes final block, creates string to write out to pseudo_MS file"""
-    # TODO: THIS IS WHERE I AM RIGHT NOW
+def reformat_block(blocklist_currentblock, blockname):
+    """takes final block, returns list with [0] = block name and [1] LoL with each sequence line for block"""
+    printsterr('Reformatting block {}'.format(blockname))
+    for counter, value in enumerate(blocklist_currentblock):
+        if counter == 0:
+            # initialize the list for the resulting sequences based on the first entry
+            nsequences = len(list(chain(*value[1])))
+            sequencelist = [[] for i in range(nsequences)]
+        for x, base in enumerate(list(chain(*value[1]))):
+            # write out each base to appropriate position within resulting list of lists
+            sequencelist[x].append(base)
+    return [blockname, sequencelist]
 
-    print blockname
-    print blocklist_currentblock
+
+def check_missing(reformatted_block, maxmissing = maxmissbasesperblock):
+    """takes reformatted block, returns True when block fulfills missing criterion, False otherwise"""
+    # TODO: implement this function
+
+    for entry in reformatted_block[1]:
+        if entry.count('N') > maxmissing:
+            printsterr('Block {} has too much missing data (more than threshold of {} = {} bases)'.format(reformatted_block[0], maxmisspercentperblock, maxmissing))
+            return False
+    return True
+
+def create_pseudoMSstring(reformatted_block):
+    """takes reformatted block and returns String that can be written out to output file"""
+    # TODO: implement this function
     pass
-
 
 def write_ABLEconfig():
     """initializes ABLE config file to convert pseudo_MS file to cbSFS"""
@@ -229,8 +256,14 @@ def version2():
     reordered_indindexes = orderindividuals(popfiledict, indindexes, poporderfile)
     processed_vcf = process_vcf(vcfname, reordered_indindexes)
 
-    for item in processed_vcf:
-        create_pseudoMSblock(fillupblock(item), generate_blockname(item))
+    with open(outfilename, 'w') as o:
+        for item in processed_vcf:
+            filled_block = fillupblock(item)
+            block_reform = reformat_block(filled_block, generate_blockname(filled_block))
+            if check_missing(block_reform):
+                o.write(create_pseudoMSstring(reformatted_block))
+
+
 
 
 
