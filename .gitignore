@@ -2,4 +2,3 @@ ABLE/venv/*
 venv/*
 ABLE/.idea/*
 .idea/*
-*.vcf

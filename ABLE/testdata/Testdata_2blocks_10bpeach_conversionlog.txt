@@ -1,0 +1,92 @@
+[INFO] Reading file testdata\Testdata_2blocks_10bpeach_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 1)
+[INFO] nsites in last block: 20
+[INFO] Number of blocks: 1
+[INFO] Reformatting block BLOCK_NW_017842120.1_1_200
+[INFO] Block BLOCK_NW_017842120.1_1_200 has too much missing data (more than threshold of 0.9 = 180 bases)
+[INFO] Reading file testdata\Testdata_2blocks_10bpeach_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 1)
+[INFO] no more sites in current block (nsites 11), new block starting at ('NW_017842120.1', 12)
+[INFO] nsites in last block: 9
+[INFO] Number of blocks: 2
+[INFO] Reformatting block BLOCK_NW_017842120.1_1_11
+[INFO] Block BLOCK_NW_017842120.1_1_11 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_12_21
+[INFO] Block BLOCK_NW_017842120.1_12_21 has fulfilled missing data criterion.
+[INFO] Reading file testdata\Testdata_2blocks_10bpeach_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 1)
+[INFO] no more sites in current block (nsites 10), new block starting at ('NW_017842120.1', 11)
+[INFO] nsites in last block: 10
+[INFO] Number of blocks: 2
+[INFO] Reformatting block BLOCK_NW_017842120.1_1_10
+[INFO] Block BLOCK_NW_017842120.1_1_10 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_11_20
+[INFO] Block BLOCK_NW_017842120.1_11_20 has fulfilled missing data criterion.
+[INFO] Reading file testdata\Testdata_2blocks_10bpeach_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 1)
+[INFO] no more sites in current block (nsites 10), new block starting at ('NW_017842120.1', 11)
+[INFO] nsites in last block: 10
+[INFO] Number of blocks: 2
+[INFO] Reformatting block BLOCK_NW_017842120.1_1_10
+[INFO] Block BLOCK_NW_017842120.1_1_10 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_11_20
+[INFO] Block BLOCK_NW_017842120.1_11_20 has fulfilled missing data criterion.
+[INFO] Reading file testdata\Testdata_2blocks_10bpeach_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 1)
+[INFO] no more sites in current block (nsites 10), new block starting at ('NW_017842120.1', 11)
+[INFO] nsites in last block: 10
+[INFO] Number of blocks: 2
+[INFO] Reformatting block BLOCK_NW_017842120.1_1_10
+[INFO] Block BLOCK_NW_017842120.1_1_10 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_11_20
+[INFO] Block BLOCK_NW_017842120.1_11_20 has fulfilled missing data criterion.
+[INFO] Reading file testdata\Testdata_2blocks_10bpeach_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 1)
+[INFO] reading in vcf file completed. 20 blocks read
+[INFO] Reformatting block BLOCK_NW_017842120.1_1_10
+[INFO] Block BLOCK_NW_017842120.1_1_10 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_11_20
+[INFO] Block BLOCK_NW_017842120.1_11_20 has fulfilled missing data criterion.
+[INFO] processing finished. 2 blocks processed, 2 blocks fulfilling missing data criterion

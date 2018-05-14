@@ -1,0 +1,205 @@
+[INFO] Reading file testdata\TESTINDS_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 63959)
+[INFO] no more sites in current block (nsites 124), new block starting at ('NW_017842120.1', 65000)
+[INFO] no more sites in current block (nsites 5), new block starting at ('NW_017842120.1', 105472)
+[INFO] nsites in last block: 128
+[INFO] Number of blocks: 3
+[INFO] Reformatting block BLOCK_NW_017842120.1_63959_64158
+[INFO] Block BLOCK_NW_017842120.1_63959_64158 has too much missing data (more than threshold of 0.05 = 10 bases)
+[INFO] Reformatting block BLOCK_NW_017842120.1_65000_65199
+[INFO] Block BLOCK_NW_017842120.1_65000_65199 has too much missing data (more than threshold of 0.05 = 10 bases)
+[INFO] Reformatting block BLOCK_NW_017842120.1_105472_105671
+[INFO] Block BLOCK_NW_017842120.1_105472_105671 has too much missing data (more than threshold of 0.05 = 10 bases)
+[INFO] Reading file testdata\TESTINDS_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 63959)
+[INFO] no more sites in current block (nsites 124), new block starting at ('NW_017842120.1', 65000)
+[INFO] no more sites in current block (nsites 5), new block starting at ('NW_017842120.1', 105472)
+[INFO] nsites in last block: 128
+[INFO] Number of blocks: 3
+[INFO] Reformatting block BLOCK_NW_017842120.1_63959_64158
+[INFO] Block BLOCK_NW_017842120.1_63959_64158 has fulfilled missing data criterion.
+[INFO] Reading file testdata\TESTINDS_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 63959)
+[INFO] no more sites in current block (nsites 124), new block starting at ('NW_017842120.1', 65000)
+[INFO] no more sites in current block (nsites 5), new block starting at ('NW_017842120.1', 105472)
+[INFO] nsites in last block: 128
+[INFO] Number of blocks: 3
+[INFO] Reformatting block BLOCK_NW_017842120.1_63959_64158
+[INFO] Block BLOCK_NW_017842120.1_63959_64158 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_65000_65199
+[INFO] Block BLOCK_NW_017842120.1_65000_65199 has too much missing data (more than threshold of 0.9 = 180 bases)
+[INFO] Reformatting block BLOCK_NW_017842120.1_105472_105671
+[INFO] Block BLOCK_NW_017842120.1_105472_105671 has fulfilled missing data criterion.
+[INFO] Reading file testdata\TESTINDS_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 63959)
+[INFO] no more sites in current block (nsites 124), new block starting at ('NW_017842120.1', 65000)
+[INFO] no more sites in current block (nsites 5), new block starting at ('NW_017842120.1', 105472)
+[INFO] nsites in last block: 128
+[INFO] Number of blocks: 3
+[INFO] Reformatting block BLOCK_NW_017842120.1_63959_64158
+[INFO] Block BLOCK_NW_017842120.1_63959_64158 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_65000_65199
+[INFO] Block BLOCK_NW_017842120.1_65000_65199 has too much missing data (more than threshold of 0.9 = 180 bases)
+[INFO] Reformatting block BLOCK_NW_017842120.1_105472_105671
+[INFO] Block BLOCK_NW_017842120.1_105472_105671 has fulfilled missing data criterion.
+[INFO] Reading file testdata\TESTINDS_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 63959)
+[INFO] no more sites in current block (nsites 124), new block starting at ('NW_017842120.1', 65000)
+[INFO] no more sites in current block (nsites 5), new block starting at ('NW_017842120.1', 105472)
+[INFO] nsites in last block: 128
+[INFO] Number of blocks: 3
+[INFO] Reformatting block BLOCK_NW_017842120.1_63959_64158
+[INFO] Block BLOCK_NW_017842120.1_63959_64158 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_65000_65199
+[INFO] Block BLOCK_NW_017842120.1_65000_65199 has too much missing data (more than threshold of 0.9 = 180 bases)
+[INFO] Reformatting block BLOCK_NW_017842120.1_105472_105671
+[INFO] Block BLOCK_NW_017842120.1_105472_105671 has fulfilled missing data criterion.
+[INFO] Reading file testdata\TESTINDS_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 63959)
+[INFO] no more sites in current block (nsites 124), new block starting at ('NW_017842120.1', 65000)
+[INFO] no more sites in current block (nsites 5), new block starting at ('NW_017842120.1', 105472)
+[INFO] nsites in last block: 128
+[INFO] Number of blocks: 3
+[INFO] Reformatting block BLOCK_NW_017842120.1_63959_64158
+[INFO] Block BLOCK_NW_017842120.1_63959_64158 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_65000_65199
+[INFO] Block BLOCK_NW_017842120.1_65000_65199 has too much missing data (more than threshold of 0.9 = 180 bases)
+[INFO] Reformatting block BLOCK_NW_017842120.1_105472_105671
+[INFO] Block BLOCK_NW_017842120.1_105472_105671 has fulfilled missing data criterion.
+[INFO] Reading file testdata\TESTINDS_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 63959)
+[INFO] no more sites in current block (nsites 124), new block starting at ('NW_017842120.1', 65000)
+[INFO] no more sites in current block (nsites 5), new block starting at ('NW_017842120.1', 105472)
+[INFO] nsites in last block: 128
+[INFO] Number of blocks: 3
+[INFO] Reformatting block BLOCK_NW_017842120.1_63959_64158
+[INFO] Block BLOCK_NW_017842120.1_63959_64158 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_65000_65199
+[INFO] Block BLOCK_NW_017842120.1_65000_65199 has too much missing data (more than threshold of 0.9 = 180 bases)
+[INFO] Reformatting block BLOCK_NW_017842120.1_105472_105671
+[INFO] Block BLOCK_NW_017842120.1_105472_105671 has fulfilled missing data criterion.
+[INFO] Reading file testdata\TESTINDS_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 63959)
+[INFO] no more sites in current block (nsites 124), new block starting at ('NW_017842120.1', 65000)
+[INFO] no more sites in current block (nsites 5), new block starting at ('NW_017842120.1', 105472)
+[INFO] nsites in last block: 128
+[INFO] Number of blocks: 3
+[INFO] Reformatting block BLOCK_NW_017842120.1_63959_64158
+[INFO] Block BLOCK_NW_017842120.1_63959_64158 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_65000_65199
+[INFO] Block BLOCK_NW_017842120.1_65000_65199 has too much missing data (more than threshold of 0.9 = 180 bases)
+[INFO] Reformatting block BLOCK_NW_017842120.1_105472_105671
+[INFO] Block BLOCK_NW_017842120.1_105472_105671 has fulfilled missing data criterion.
+[INFO] Reading file testdata\TESTINDS_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 63959)
+[INFO] no more sites in current block (nsites 124), new block starting at ('NW_017842120.1', 65000)
+[INFO] no more sites in current block (nsites 5), new block starting at ('NW_017842120.1', 105472)
+[INFO] nsites in last block: 128
+[INFO] Number of blocks: 3
+[INFO] Reformatting block BLOCK_NW_017842120.1_63959_64158
+[INFO] Block BLOCK_NW_017842120.1_63959_64158 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_65000_65199
+[INFO] Block BLOCK_NW_017842120.1_65000_65199 has too much missing data (more than threshold of 0.9 = 180 bases)
+[INFO] Reformatting block BLOCK_NW_017842120.1_105472_105671
+[INFO] Block BLOCK_NW_017842120.1_105472_105671 has fulfilled missing data criterion.
+[INFO] Reading file testdata\TESTINDS_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 63959)
+[INFO] no more sites in current block (nsites 124), new block starting at ('NW_017842120.1', 65000)
+[INFO] no more sites in current block (nsites 5), new block starting at ('NW_017842120.1', 105472)
+[INFO] nsites in last block: 128
+[INFO] Number of blocks: 3
+[INFO] Reformatting block BLOCK_NW_017842120.1_63959_64158
+[INFO] Block BLOCK_NW_017842120.1_63959_64158 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_65000_65199
+[INFO] Block BLOCK_NW_017842120.1_65000_65199 has too much missing data (more than threshold of 0.9 = 180 bases)
+[INFO] Reformatting block BLOCK_NW_017842120.1_105472_105671
+[INFO] Block BLOCK_NW_017842120.1_105472_105671 has fulfilled missing data criterion.
+[INFO] Reading file testdata\TESTINDS_popfile.txt
+[INFO] Population file read. There are 2 populations
+[INFO] Populations are: TESTPOP2, TESTPOP1
+[INFO] Extracting indexes of samples from vcf header: 2 samples
+[INFO] Desired order of populations is TESTPOP2 TESTPOP1
+[INFO] Population in position 1 has 1 individuals TESTIND2
+[INFO] Population in position 2 has 1 individuals TESTIND1
+[INFO] Indexes of individuals in correct order: [1, 0]
+[INFO] first block: ('NW_017842120.1', 63959)
+[INFO] no more sites in current block (nsites 124), new block starting at ('NW_017842120.1', 65000)
+[INFO] no more sites in current block (nsites 5), new block starting at ('NW_017842120.1', 105472)
+[INFO] nsites in last block: 128
+[INFO] Number of blocks: 3
+[INFO] Reformatting block BLOCK_NW_017842120.1_63959_64158
+[INFO] Block BLOCK_NW_017842120.1_63959_64158 has fulfilled missing data criterion.
+[INFO] Reformatting block BLOCK_NW_017842120.1_65000_65199
+[INFO] Block BLOCK_NW_017842120.1_65000_65199 has too much missing data (more than threshold of 0.9 = 180 bases)
+[INFO] Reformatting block BLOCK_NW_017842120.1_105472_105671
+[INFO] Block BLOCK_NW_017842120.1_105472_105671 has fulfilled missing data criterion.

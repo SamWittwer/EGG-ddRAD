@@ -1,34 +1,71 @@
-import sys
+import sys, getopt
+from itertools import repeat, chain
 
 #### settings
-# TODO: get arguments from sys.argv
+# TODO: counter for processed blocks in process_vcf and in check blocks
 
-blocklength = 200
-maxmissperblock = 0.05  # max % missing data per block
+
+blocklength = 10
+maxmisspercentperblock = 0.90  # max % missing data per block
+maxmissbasesperblock = int(maxmisspercentperblock * blocklength)
+
+### to look at:
 nindperpop = 2  # number of individuals to sample per population
 
-filebasename = 'testdata\\TESTINDS'
+filebasename = 'testdata\\Testdata_2blocks_10bpeach'
 vcfname = filebasename + '.vcf'
 outfilename = filebasename + '_' + str(blocklength) + '.pseudo_MS'
 popfilename = filebasename + '_popfile.txt'
 poporderfile = filebasename + '_poporder.txt'
-verbose = True
+logfilename = filebasename + '_conversionlog.txt'
+verbose = False
 
-positioninfo = 'CHROMPOS'  # either CHROMPOS or ID
-ID_sep = '_'  # character to split SNP ID by
+def main():
+
+    # read in pop file (tab delimited file with ind, pop
+    popfiledict = readpopfile(popfilename)
+
+    # read column for each sample from vcf header
+    indindexes = getindexfromvcfheader(vcfname)
+
+    # map individuals to the order provided in the population order file (poporder)
+    reordered_indindexes = orderindividuals(popfiledict, indindexes, poporderfile)
+
+    # process vcf block by block
+    processed_vcf = process_vcf(vcfname, reordered_indindexes)
+
+    # go through each block, fill up with N for missing and write out if missing data criterion fulfilled
+    with open(outfilename, 'w') as o:
+        processedblocks = 0
+        passedblocks = 0
+        for item in processed_vcf:
+            processedblocks = processedblocks + 1
+            filled_block = fillupblock(item)
+            block_reform = reformat_block(filled_block, generate_blockname(filled_block))
+            if check_missing(block_reform):
+                o.write(create_pseudoMSstring(block_reform))
+                passedblocks = passedblocks + 1
+            if processedblocks % 1000 == 0:
+                printsterr('{} blocks processed, {} blocks fulfilling missing data criterion'.format(processedblocks, passedblocks))
+    printsterr('processing finished. {} blocks processed, {} blocks fulfilling missing data criterion'.format(processedblocks, passedblocks))
 
 
 def printsterr(text, type='INFO', v=verbose):
-    if type == 'INFO' and v:
+    if type == 'INFO':
         textcolor = '\033[01;32m'
-        prefix = '[ OK ] '
+        prefix = '[INFO] '
         outtext = prefix + text + '\n'
-        sys.stderr.write(textcolor + outtext)
+        with open(logfilename, 'a') as log:
+            log.write(outtext)
+        if v:
+            sys.stderr.write(textcolor + outtext)
     if type == 'WARN':
         textcolor = '\033[01;31m'
         prefix = '[WARN] '
         sys.exit(1)
         outtext = prefix + text + '\n'
+        with open(logfilename, 'a') as log:
+            log.write(outtext)
         sys.stderr.write(textcolor + outtext)
 
 
@@ -55,7 +92,7 @@ def getindexfromvcfheader(vcffilepath):
             for x in infile:
                 if x.startswith('#CHROM'):
                     headerlist = x[1:].strip().split('\t')
-                    #indexdict {individual: position(no offset)}
+                    # indexdict {individual: position(no offset)}
                     indexdict = {k: v for (v, k) in enumerate(headerlist[9:])}
                     printsterr('Extracting indexes of samples from vcf header: {} samples'.format(len(indexdict)))
                     break
@@ -102,43 +139,49 @@ def process_vcf(vcffilepath, individualorder):
             blocklist = []
             i = 0
             for line in infile:
-                #skip header
+                # skip header
                 if not line.startswith('#'):
                     vcflinelist = line.strip().split('\t')
 
-                    #gather mapping info for current line line (0 = REF, 1 = ALT, . = N)
+                    # gather mapping info for current line line (0 = REF, 1 = ALT, . = N)
                     alleledict = vcfline_mapbase(vcflinelist)
                     allele = lambda x: alleledict[x]
 
-                    #go through individuals (linelist[9:]) and convert numbers to bases for each
-                    #(result: list with tuple per individual)
+                    # go through individuals (linelist[9:]) and convert numbers to bases for each
+                    # (result: list with tuple per individual)
                     individual_bases = [tuple([allele(a) for a in individual.split(':')[0].split('/')]) for individual in vcflinelist[9:]]
 
-                    #reorder individual tuples based on the population order given
+                    # reorder individual tuples based on the population order given
                     individuals_reordered = [individual_bases[x] for x in individualorder]
 
-                    #prepare tuple of current line
+                    # prepare tuple of current line
                     currentpos = ((vcflinelist[0], int(vcflinelist[1])),individuals_reordered)
 
                     if len(blocklist) == 0:
+                        # start first block
                         printsterr('first block: {}'.format(currentpos[0]))
                         blocklist.append(currentpos)
                     else:
                         if current_belongstoblock(blocklist, currentpos):
+                            # if currentpos in block -> append and continue
                             blocklist.append(currentpos)
                         else:
-                            #not part of the same block!
+                            # if currentpos not in block -> append current block to result and start new block
                             result.append(blocklist)
-                            printsterr('no more sites in current block (nsites {}), new block starting at {}'.format(len(blocklist), currentpos[0]))
-                            #print '*************BLOCK END'
-                            #print currentpos
+                            # printsterr('no more sites in current block (nsites {}), new block starting at {}'.format(len(blocklist), currentpos[0]))
                             blocklist = []
                             blocklist.append(currentpos)
                     i = i + 1
+                    if i % 1000 == 0:
+                        printsterr('{} blocks read from vcf file'.format(i))
+            # append last block after loop has finished
             result.append(blocklist)
-            printsterr('nsites in last block: {}'.format(len(blocklist)))
-            printsterr('Number of blocks: {}'.format(len(result)))
+            printsterr('reading in vcf file completed. {} blocks read'.format(i))
+            # print logging messages
+            # printsterr('nsites in last block: {}'.format(len(blocklist)))
+            # printsterr('Number of blocks: {}'.format(len(result)))
             return result
+
     except IOError:
         printsterr('File {} not found! Exiting.'.format(poporderfile), 'WARN')
 
@@ -146,13 +189,11 @@ def process_vcf(vcffilepath, individualorder):
 def current_belongstoblock(blocklist, currentposition, l = blocklength):
     """Takes the current block list and checks if current line is part of block (True) or new block (False)"""
     if blocklist[0][0][0]==currentposition[0][0]:
-        if currentposition[0][1] - blocklist[0][0][1] <= l:
-            # The two positions are on the same CHR and difference is equal or less block length l -> True
-            #print '{} {} SAME BLOCK {} {}'.format(blocklist[0][0][0], blocklist[0][0][1], currentposition[0][0], currentposition[0][1])
+        if currentposition[0][1] - blocklist[0][0][1] < l:
+            # The two positions are on the same CHR and difference is less than block length l -> True
             return True
         else:
             # The two positions are on the same CHR but out of block length -> False
-            #print '{} {} NEW BLOCK {} {}'.format(blocklist[0][0][0], blocklist[0][0][1], currentposition[0][0], currentposition[0][1])
             return False
     else:
         # the two positions are not on the same CHR -> False
@@ -164,6 +205,7 @@ def vcfline_mapbase(vcfline):
 
     ONLY WORKS FOR BIALLELIC ATM
     """
+    # TODO: adapt this function for multiallelic SNPs
     if vcfline[4] == '.':
         x = {'0': vcfline[3], '.': 'N'}
     else:
@@ -173,42 +215,90 @@ def vcfline_mapbase(vcfline):
 
 def fillupblock(blocklist, blocklen = blocklength):
     """takes block and fills up gaps within and at end with N per individual"""
-    # TODO: implement this function
-    print blocklen
-    print 'filling up blocks'
-    pass
 
-def create_pseudoMSblock(blocklist):
-    """takes final block, generates blockname and creates string to write out to pseudo_MS file"""
-    # TODO: implement this function
-    print 'creating pseudoMS'
-    fillupblock(blocklist)
-    pass
+    if len(blocklist) == blocklen:
+        # block already has appropriate length, return as it is.
+        return blocklist
+    else:
+        # block too short for blocklen, fill up gaps first and extend with N per ind and return
+        filledblock = []
+        for counter, entry in enumerate(blocklist):
+            if counter == 0:
+                # first entry: append to result and generate placeholder for missing data
+                filledblock.append(entry)
+                CHR = entry[0][0]
+                placeholderNs = list(repeat(('N','N'), len(entry[1])))
+            else:
+                # check if current entry is within 1 bp of last result, fill in placeholder if not
+                if entry[0][1] - filledblock[-1][0][1] == 1:
+                    filledblock.append(entry)
+                else:
+                    while entry[0][1] - filledblock[-1][0][1] > 1:
+                        filledblock.append(((CHR, filledblock[-1][0][1] + 1),placeholderNs))
+                    filledblock.append(entry)
 
+        # all gaps now filled. Fill up placeholder at the end until blocklength is reached
+        while len(filledblock) < blocklen:
+            filledblock.append(((CHR, filledblock[-1][0][1] + 1), placeholderNs))
+
+        return filledblock
+
+
+def generate_blockname(blocklist_currentblock):
+    """takes list of list from block and constructs string for block name"""
+    return 'BLOCK_{}_{}_{}'.format(blocklist_currentblock[0][0][0], blocklist_currentblock[0][0][1],
+                                   blocklist_currentblock[-1][0][1])
+
+
+def reformat_block(blocklist_currentblock, blockname):
+    """takes final block, returns list with [0] = block name and [1] LoL with each sequence line for block"""
+    printsterr('Reformatting block {}'.format(blockname))
+    for counter, value in enumerate(blocklist_currentblock):
+        if counter == 0:
+            # initialize the list of lists for the resulting sequences based on the first entry
+            nsequences = len(list(chain(*value[1])))
+            sequencelist = [[] for i in range(nsequences)]
+
+        for x, base in enumerate(list(chain(*value[1]))):
+            # write out each base to appropriate position within resulting list of lists
+            sequencelist[x].append(base)
+    return [blockname, sequencelist]
+
+
+def check_missing(reformatted_block, maxmissing = maxmissbasesperblock):
+    """takes reformatted block, returns True when block fulfills missing criterion, False otherwise"""
+    for entry in reformatted_block[1]:
+        if entry.count('N') > maxmissing:
+            # more N than missing data threshold. Block will have to be removed
+            printsterr('Block {} has too much missing data (more than threshold of {} = {} bases)'.format(reformatted_block[0], maxmisspercentperblock, maxmissing))
+            return False
+
+    # if no entry is above missing data threshold, block is ok. Return True
+    printsterr('Block {} has fulfilled missing data criterion.'.format(reformatted_block[0]))
+    return True
+
+
+def create_pseudoMSstring(reformatted_block):
+    """takes reformatted block and returns String that can be written out to output file"""
+    # put // in beginning of block name
+    blockname = '//\n' + reformatted_block[0] + '\n'
+
+    # concatenate all lists of sequences
+    sequences = '\n'.join([''.join(x) for x in reformatted_block[1]]) + '\n'
+
+    return blockname + sequences + '\n'
 
 def write_ABLEconfig():
     """initializes ABLE config file to convert pseudo_MS file to cbSFS"""
     # TODO: implement this function
     pass
 
+main()
 
-def version2():
-    popfiledict = readpopfile(popfilename)
-    indindexes = getindexfromvcfheader(vcfname)
-    reordered_indindexes = orderindividuals(popfiledict, indindexes, poporderfile)
-    #print reordered_indindexes
-    #print indindexes
-    processed_vcf = process_vcf(vcfname, reordered_indindexes)
-    for item in processed_vcf:
-        print item
 
-    pseudoMS = create_pseudoMSblock(processed_vcf)
 
-    #TODO: CURRENT go through processed vcf (list of blocks with tuples for coords [0] and sequence [1]
-    #
-
-version2()
-
+#if __name__ == '__main__':
+#    main(sys.argv[1:])
 
 
 
