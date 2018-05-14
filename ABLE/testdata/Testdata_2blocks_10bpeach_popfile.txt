@@ -1,0 +1,6 @@
+# this is a comment line
+# the file must be tab delimited
+
+
+TESTIND1	TESTPOP1
+TESTIND2	TESTPOP2
