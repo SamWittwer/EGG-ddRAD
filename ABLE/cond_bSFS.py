@@ -57,7 +57,7 @@ def main():
     outstring = ''
     outstring += popsline + 'task conditional_bSFS\n' + datafileline + ' '.join([str(tbidict[x]) if x in tbidict else str(x) for x in ABLElist])
     if folded:
-        outstring += 'folded'
+        outstring += '\nfolded'
     try:
         outstream = open(outfilename, 'w')
         outstream.write(outstring)
