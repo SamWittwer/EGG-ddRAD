@@ -2,8 +2,9 @@ import getopt
 import sys
 
 def main():
+    folded = False
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:a:o:')
+        opts, args = getopt.getopt(sys.argv[1:], 'c:a:o:f')
     except getopt.GetoptError as err:
         print str(err)
         sys.exit(1)
@@ -37,6 +38,8 @@ def main():
                 configfile.close()
         elif o in ('-o'):
             outfilename = a
+        elif o in ('-f'):
+            folded = True
             
     tbidict={}
     for i, tbielement in enumerate(tbivalues):
@@ -53,6 +56,8 @@ def main():
     print datafileline
     outstring = ''
     outstring += popsline + 'task conditional_bSFS\n' + datafileline + ' '.join([str(tbidict[x]) if x in tbidict else str(x) for x in ABLElist])
+    if folded:
+        outstring += 'folded'
     try:
         outstream = open(outfilename, 'w')
         outstream.write(outstring)
