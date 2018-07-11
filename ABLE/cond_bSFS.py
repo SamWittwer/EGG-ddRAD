@@ -1,11 +1,13 @@
 import getopt
 import sys
-#testing
+#This script takes a .ABLEinfer and an ABLE config file to produce a config file for the conditional bSFS
+
+
 
 def main():
     folded = False
     try:
-        opts, args = getopt.getopt(sys.argv[1:], 'c:a:o:f')
+        opts, args = getopt.getopt(sys.argv[1:], 'c:a:o:fh')
     except getopt.GetoptError as err:
         print str(err)
         sys.exit(1)
@@ -41,6 +43,9 @@ def main():
             outfilename = a
         elif o in ('-f'):
             folded = True
+        elif o in ('-h'):
+            displayhelp()
+            sys.exit()
             
     tbidict={}
     for i, tbielement in enumerate(tbivalues):
@@ -64,5 +69,16 @@ def main():
         outstream.write(outstring)
     finally:
         outstream.close()
+
+def displayhelp():
+    print """usage: 
+    cond_bSFS.py -a ABLEinfer_output -c ABLEinfer_config -o outfilename [options]
+    
+    
+    -a      The output from the ABLE task infer analysis
+    -c      The config file used to infer
+    -o      The desired output filename
+    -f      Add folded keyword to output
+    -h      this helpful text"""
 
 main()
