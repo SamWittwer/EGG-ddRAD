@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python
 infilename = 'thin100kbmaxmissing7_badindsremoved_minQ30minDP05maf5noindel.recode.vcf'
 
 with open(infilename, 'r') as vcf, open('missinganderrorrates.txt', 'w') as out:
