@@ -1,3 +1,5 @@
+### This script takes a vcf file and converts it to a COANCESTRY input file (genotypes)
+
 infilename = 'thin100kbmaxmissing7_badindsremoved_minQ30minDP05maf5noindel.recode.vcf'
 infile = open(infilename,'r')
 
