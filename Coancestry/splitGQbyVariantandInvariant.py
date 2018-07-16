@@ -1,3 +1,4 @@
+#!/bin/python
 vcfinfile = 'C:\\Users\\Sam\\Desktop\\Livia_Coancestry\\step06a.recode.vcf'
 
 with open(vcfinfile, 'r') as f:

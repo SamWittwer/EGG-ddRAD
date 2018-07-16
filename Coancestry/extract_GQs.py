@@ -1,3 +1,4 @@
+#!/bin/python
 import numpy
 with open('thin100kbmaxmissing7_badindsremoved_minQ30minDP05maf5noindel.recode.vcf', 'r') as infile, open('out.txt', 'w') as outfile:
     for line in infile:

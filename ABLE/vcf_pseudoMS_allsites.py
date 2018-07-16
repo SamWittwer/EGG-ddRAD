@@ -1,3 +1,4 @@
+#!/bin/python
 import sys, getopt
 from itertools import repeat, chain
 

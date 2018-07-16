@@ -1,3 +1,5 @@
+#!/bin/python
+
 path = 'C:\\Users\\Sam\\Desktop\\Livia_Coancestry\\'
 infilename = path + 'step06.recode.vcf'
 outfilename = infilename + '.coancestry.txt'
