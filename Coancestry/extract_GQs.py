@@ -6,3 +6,4 @@ with open('thin100kbmaxmissing7_badindsremoved_minQ30minDP05maf5noindel.recode.v
             GQs_Q = [x.split(':')[fields['GQ']] for x in line.strip().split('\t')[9:] if not x.startswith('./.')]
             GQs_P = [10**(-float(Q)/10) for Q in GQs_Q]
             outfile.write('\t'.join([str(x) for x in GQs_P]) + '\n')
+
