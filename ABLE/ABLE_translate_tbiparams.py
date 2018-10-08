@@ -91,11 +91,11 @@ def main():
 def convertparam(tbi, mutationrate, blocksize, tbitype, generationtime=None, refpopsize=None):
     try:
         if tbitype == 'THETA':
-            return (tbi/(4*mutationrate*blocksize))
+            return (tbi/(4*mutationrate*blocksize)) #doublechecked. Returns ref pop size
         elif tbitype == 'TIME':
-            return (tbi*4*refpopsize)*generationtime
+            return (tbi*4*refpopsize)*generationtime #doublechecked. Returns number of years
         elif tbitype == 'ALPHA':
-            return tbi
+            return tbi #doublechecked. negative value means decline, positive growth
         elif tbitype == 'RHO':
             return tbi/(4*refpopsize*blocksize)
         elif tbitype == 'M':
@@ -131,9 +131,9 @@ tpi parameter conversion script for ABLE written by Samuel Wittwer (mail@samuelw
                             
                             NE      Effective population size (-n i *Nei*)
                             
--m      None                Required. Mutation rate per site per generation (float). Required.
+-m      None                Required. Mutation rate PER SITE PER GENERATION (float). Required.
 -g      None                Required. Generation time in years (int).
--b      None                Required. Block size of bSFS in bp.
+-b      None                Required. Block size of bSFS in bp. Required.
 -h                          this helpful text'''
     print s
     sys.exit(0)
