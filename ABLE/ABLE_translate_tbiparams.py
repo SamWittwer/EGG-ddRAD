@@ -99,7 +99,7 @@ def convertparam(tbi, mutationrate, blocksize, tbitype, generationtime=None, ref
         elif tbitype == 'RHO':
             return tbi/(4*refpopsize*blocksize)
         elif tbitype == 'M':
-            return tbi
+            return tbi/(4*refpopsize)
         elif tbitype == 'SPLITP':
             return tbi
         elif tbitype == 'NE':
