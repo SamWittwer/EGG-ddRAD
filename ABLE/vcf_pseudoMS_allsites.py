@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import sys, getopt
 from itertools import repeat, chain
 
@@ -206,8 +207,8 @@ def vcfline_mapbase(vcfline):
     ONLY WORKS FOR BIALLELIC ATM
     """
     # TODO: adapt this function for multiallelic SNPs
-    if vcfline[4] == '.':
-        x = {'0': vcfline[3], '.': 'N'}
+    if vcfline[4] in ['.', '*']:
+        x = {'0': vcfline[3], '.': 'N', '1': 'N'}
     else:
         x = {'0': vcfline[3], '1': vcfline[4], '.': 'N'}
     return x

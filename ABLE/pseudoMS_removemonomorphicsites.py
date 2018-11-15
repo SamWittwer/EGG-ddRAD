@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import time
 
 def all_same(items):

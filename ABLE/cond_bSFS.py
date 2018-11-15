@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import getopt
 import sys
 #This script takes a .ABLEinfer and an ABLE config file to produce a config file for the conditional bSFS
