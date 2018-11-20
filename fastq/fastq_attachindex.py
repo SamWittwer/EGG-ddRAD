@@ -24,7 +24,7 @@ def loadargs():
 
 
 def fastqtodict(fastqfile):
-    """generic function to read fastq. Ignores Q score line. in: fastq filename out: dict {readname:seq}"""
+    """generic function to read fastq. Ignores Q score line. in: fastq filename out: dict {readname:[seq, Q]}"""
     with open(fastqfile) as i:
         counter = None
         readname = None
@@ -33,8 +33,12 @@ def fastqtodict(fastqfile):
             if line.startswith('@'):
                 readname = line.split(' ')[0]
                 counter = 1
+                readlist = []
             if counter == 2:
-                seqdict[readname] = line.strip()
+                readlist.append(line.strip())
+            elif counter == 4:
+                readlist.append(line.strip())
+                seqdict[readname] = readlist
             counter += 1
     return seqdict
 
@@ -46,15 +50,11 @@ def help():
 def main(readfile, indexfile, outputfile):
     indexdict = fastqtodict(indexfile)
     seqdict = fastqtodict(readfile)
-
-    print len(indexdict)
-    print len(seqdict)
-
+    print '{} sequence reads read and {} index reads read.'.format(len(seqdict), len(indexdict))
+    with open(outputfile, 'w') as o:
+        for key in indexdict:
+            o.write(key + '_' + indexdict[key][0] + '\n')
+            o.write(seqdict[key][0] + '\n+\n' + seqdict[key][1] + '\n')
 
 if __name__ == '__main__':
     loadargs()
-
-
-#TODO: attach index sequence to read name. fastq reading works.
-
-#TODO: test with missing indexes (fewer indexes than reads -> robust to filtering)
