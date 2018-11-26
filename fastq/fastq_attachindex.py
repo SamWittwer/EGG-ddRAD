@@ -41,8 +41,9 @@ def fastqtodict(fastqfile, readQ=True):
                     readlist.append(line.strip())
                 seqdict[readname] = readlist
             counter += 1
-            if (linecounter/4.0)%500 == 0:
+            if (linecounter/4.0)%500000 == 0:
                 print '{} reads processed from {}'.format((linecounter/4.0), fastqfile)
+        print '{} reads in dictionary.'.format(len(seqdict))
     return seqdict
 
 
