@@ -29,7 +29,7 @@ def loadargs():
 def main(readfile, idx, outfile, outprefix):
     readdict = f.fastqtodict(readfile)
     for i, index in enumerate(idx):
-        with open(outputprefix + outfile[i], 'w') as o:
+        with open(outprefix + outfile[i], 'w') as o:
             for element in readdict:
                 if element.split('_')[1].startswith(idx):
                     o.write('{}\n{}\n+\n{}\n'.format(element, readdict[element][0], readdict[element][1]))
