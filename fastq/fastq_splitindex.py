@@ -40,7 +40,7 @@ def help():
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    loadargs()
 
 # script: Take read name, split by _, depending on sequence split onto different
 # outfiles
