@@ -1,7 +1,7 @@
 ### second step. Takes reads with attached index sequences and splits them up
 import sys
 import fastq_attachindex as f
-
+import getopt
 
 def loadargs():
     """This function loads the command line arguments and starts main"""
