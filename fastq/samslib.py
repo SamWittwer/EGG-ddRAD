@@ -1,6 +1,7 @@
 class fastq_read(object):
     """one single fastq read"""
-    
+    # had to adapt this for libraries 9 and 10, initial version is in Genomics
+    # data analysis (dropbox)
     def __init__(self, readlist):
         self.readdict = {}
         
@@ -9,8 +10,8 @@ class fastq_read(object):
         readlist[2] = readlist[2].strip()
         readlist[3] = readlist[3].strip()
         
-        readname1 = readlist[0].split(' ')[0].split(':')
-        readname2 = readlist[0].split(' ')[1].split(':')
+        readname1 = readlist[0].split('_')[0].split(':')
+        self.readdict['readname_indexsequence'] = readlist[0].split('_')[1]
         
         self.readdict['readname_instrument'] = readname1[0][1:]
         self.readdict['readname_runid'] = readname1[1]
@@ -19,11 +20,6 @@ class fastq_read(object):
         self.readdict['readname_flowcelltile'] = readname1[4]
         self.readdict['readname_clusterx'] = readname1[5]
         self.readdict['readname_clustery'] = readname1[6]
-    
-        self.readdict['readname_pairno'] = readname2[0]
-        self.readdict['readname_filtered'] = readname2[1]
-        self.readdict['readname_controlbits'] = readname2[2]
-        self.readdict['readname_indexsequence'] = readname2[3]
         
         self.readdict['sequence'] = readlist[1]
         
@@ -36,17 +32,14 @@ class fastq_read(object):
             self.readdict['degenerateidx'] = self.readdict['readname_indexsequence'][6:]
 
     def fastq_writestring(self):
-        return '@{}:{}:{}:{}:{}:{}:{} {}:{}:{}:{}\n{}\n{}\n{}\n'.format(
+        return '@{}:{}:{}:{}:{}:{}:{}_{}\n{}\n{}\n{}\n'.format(
             self.readdict['readname_instrument'], 
             self.readdict['readname_runid'], 
             self.readdict['readname_flowcellid'], 
             self.readdict['readname_flowcelllane'], 
             self.readdict['readname_flowcelltile'], 
             self.readdict['readname_clusterx'], 
-            self.readdict['readname_clustery'], 
-            self.readdict['readname_pairno'], 
-            self.readdict['readname_filtered'], 
-            self.readdict['readname_controlbits'], 
+            self.readdict['readname_clustery'],
             self.readdict['readname_indexsequence'], 
             self.readdict['sequence'], 
             self.readdict['spacer'], 
