@@ -47,14 +47,9 @@ def main(readfile, indexfile, outputfile):
     indexdict = fastqtodict(indexfile)
     seqdict = fastqtodict(readfile)
 
-    #for element in seqdict:
-    #    print indexdict[element]
-    newreadnamesdict = {}
-    for element in indexdict:
-        newreadnamesdict[element + '_' + indexdict[element]] = seqdict[element]
-    for key in newreadnamesdict:
-        print key
-        print newreadnamesdict[key]
+    print len(indexdict)
+    print len(seqdict)
+
 
 if __name__ == '__main__':
     loadargs()
