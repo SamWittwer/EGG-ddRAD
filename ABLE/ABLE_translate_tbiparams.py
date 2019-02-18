@@ -68,15 +68,22 @@ def main():
    
         for i, tbitype in enumerate(tbilist):
             translated_tbis.append(convertparam(tbiparams[i], mutationrate, blocksize, tbitype, generationtime, Ref_pop_size))
+        
+        for i, tbitype in enumerate(tbilist):
+            outputstream.write('{},{},{},{},tbi{},{},{}\n'.format(infilename, mutationrate, generationtime, blocksize,
+                                                                  i + 1, tbiparams[i],
+                                                                  convertparam(tbiparams[i], mutationrate, blocksize,
+                                                                               tbitype, generationtime, Ref_pop_size)))
 
-        outputstream.write('\n\n======================================================\n\n')
-        if infileset:
-            outputstream.write('TBI parameters from analysis ' + infilename + '\n')
-        outputstream.write('TBI PARAMETERS:' + '\n')
-        outputstream.write('\t'.join([str(x) for x in tbiparams]) + '\n')
-        outputstream.write('ACTUAL VALUES:' + '\n')
-        outputstream.write('\t'.join([str(x) for x in tbilist]) + '\n')
-        outputstream.write('\t'.join([str(x) for x in translated_tbis]) + '\n')
+
+        #outputstream.write('\n\n======================================================\n\n')
+        #if infileset:
+        #    outputstream.write('TBI parameters from analysis ' + infilename + '\n')
+        #outputstream.write('TBI PARAMETERS:' + '\n')
+        #outputstream.write('\t'.join([str(x) for x in tbiparams]) + '\n')
+        #outputstream.write('ACTUAL VALUES:' + '\n')
+        #outputstream.write('\t'.join([str(x) for x in tbilist]) + '\n')
+        #outputstream.write('\t'.join([str(x) for x in translated_tbis]) + '\n')
 
 
 
