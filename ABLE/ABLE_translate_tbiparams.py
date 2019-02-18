@@ -68,10 +68,10 @@ def main():
    
         for i, tbitype in enumerate(tbilist):
             translated_tbis.append(convertparam(tbiparams[i], mutationrate, blocksize, tbitype, generationtime, Ref_pop_size))
-        
+
         for i, tbitype in enumerate(tbilist):
-            outputstream.write('{},{},{},{},tbi{},{},{}\n'.format(infilename, mutationrate, generationtime, blocksize,
-                                                                  i + 1, tbiparams[i],
+            outputstream.write('{},{},{},{},tbi{},{},{},{}\n'.format(infilename, mutationrate, generationtime, blocksize,
+                                                                  i + 1, tbitype, tbiparams[i],
                                                                   convertparam(tbiparams[i], mutationrate, blocksize,
                                                                                tbitype, generationtime, Ref_pop_size)))
 
