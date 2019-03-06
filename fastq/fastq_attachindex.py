@@ -39,16 +39,36 @@ def fastqtodict(fastqfile):
     return seqdict
 
 
+def process_read_onebyone(fileobj, indexdict):
+    counter = None
+    readname = None
+    for line in fileobj:
+        if line.startswith('@'):
+            readname = line.strip().split(' ')
+            counter = 1
+        if counter == 2:
+            sequence = line.strip()
+        counter += 1
+        if counter == 4:
+            qscore = line.strip()
+            if readname[0] in indexdict:
+                return True, '{}_{}'.format(readname[0], indexdict[readname[0]]), sequence, qscore
+            else:
+                return False, '', ''
+
+
+
 def help():
     print 'HELP'
 
 
 def main(readfile, indexfile, outputfile):
     indexdict = fastqtodict(indexfile)
-    seqdict = fastqtodict(readfile)
-
     print len(indexdict)
-    print len(seqdict)
+    with open(readfile, 'r') as i, open(outputfile, 'w') as o:
+        currentread = process_read_onebyone(i, indexdict)
+        if currentread[0]:
+            o.write('{}\n{}\n+\n{}'.format(currentread[1], currentread[2], currentread[3]))
 
 
 if __name__ == '__main__':
