@@ -4,9 +4,9 @@ import sys
 
 def loadargs():
     """This function loads the command line arguments and starts main"""
-    readfile = None
+    readfile = sys.stdin
     indexfile = None
-    outputfile = None
+    outputfile = sys.stdout
     try:
         opts, _ = getopt.getopt(sys.argv[1:], 'r:i:o:h', ['reads', 'index', 'output', 'help'])
     except getopt.GetoptError:
