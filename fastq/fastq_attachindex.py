@@ -13,11 +13,11 @@ def loadargs():
         sys.exit(2)
     for opt, arg in opts:
         if opt in ('-r', '--reads'):
-            readfile = arg
+            readfile = open(arg, 'r')
         if opt in ('-i', '--index'):
             indexfile = arg
         if opt in ('-o', '--output'):
-            outputfile = arg
+            outputfile = open(arg, 'w')
         if opt in ('-h', '--help'):
             help()
     main(readfile, indexfile, outputfile)
@@ -65,10 +65,19 @@ def help():
 def main(readfile, indexfile, outputfile):
     indexdict = fastqtodict(indexfile)
     print len(indexdict)
-    with open(readfile, 'r') as i, open(outputfile, 'w') as o:
-        currentread = process_read_onebyone(i, indexdict)
-        if currentread[0]:
-            o.write('{}\n{}\n+\n{}'.format(currentread[1], currentread[2], currentread[3]))
+    for line in readfile:
+        if line.startswith('@'):
+            counter = 1
+            readname = line.strip().split(' ')
+        if counter == 2:
+            sequence = line.strip()
+        counter += 1
+        if counter == 4:
+            qscore = line.strip()
+            if readname[0] in indexdict:
+                newname = '{}_{}'.format(readname[0], indexdict[readname[0]])
+                outputfile.write('{}\n{}\n+\n{}'.format(newname, sequence, qscore))
+            counter = 0
 
 
 if __name__ == '__main__':
