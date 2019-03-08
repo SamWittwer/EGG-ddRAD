@@ -13,6 +13,6 @@ for line in instream:
     if counter == 4:
         qscore = line.strip()
         if len(readseq) == targetlength:
-            outstream.write('{}\n{}\n+\n{}'.format(readname, readseq, qscore))
+            outstream.write('{}\n{}\n+\n{}\n'.format(readname, readseq, qscore))
         counter = 0
     counter += 1
