@@ -75,7 +75,7 @@ def main(readfile, indexfile, outputfile):
             qscore = line.strip()
             if readname[0] in indexdict:
                 newname = '{}_{}'.format(readname[0], indexdict[readname[0]])
-                outputfile.write('{}\n{}\n+\n{}'.format(newname, sequence, qscore))
+                outputfile.write('{}\n{}\n+\n{}\n'.format(newname, sequence, qscore))
             counter = 0
         counter += 1
 
