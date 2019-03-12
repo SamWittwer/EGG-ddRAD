@@ -10,14 +10,14 @@ outstream = sys.stdout
 ## reading in all the index sequences
 with open(indexfile, 'r') as idx:
     counter = 0
-    readlist = []
+    readname = None
     idxdict = {}
     for line in idx:
+        if counter == 0:
+            readname = line.strip().split(' ')[0]
         if counter == 3:
-            readlist.append(line)
-            readobj = samslib.fastq_read(readlist)
-            idxdict[readobj.getreadname()] = readobj
-            readlist = []
+            idxdict[readname] = line.strip()
+            readname = None
             counter = 0
         elif counter < 3:
             readlist.append(line)
@@ -31,7 +31,7 @@ for line in readstream:
         readlist_read.append(line)
         readobj = samslib.fastq_read(readlist_read)
         if readobj.getreadname() in idxdict:
-            readobj.putindex(idxdict[readobj.getreadname()].sequence())
+            readobj.putindex(idxdict[readobj.getreadname()])
             outstream.write(readobj.fastq_writestring())
         readlist_read = []
         counter = 0
