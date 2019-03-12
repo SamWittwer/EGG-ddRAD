@@ -6,7 +6,7 @@ subsets = {}
 
 for item in degenerate_product:
     subsets[item] = []
-infile = sys.stdin
+infile = open('testset.fastq', 'r')
 outfile = sys.stdout
 
 linecounter = 0
