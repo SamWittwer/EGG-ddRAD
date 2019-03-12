@@ -7,8 +7,8 @@ subsets = {}
 for item in degenerate_product:
     subsets[item] = []
 print sys.argv[1]
-infile = open(sys.argv[1], 'r')
-outfile = open('PCR_' + sys.argv[1], 'w')
+infile = sys.stdin
+outfile = sys.stdout
 
 linecounter = 0
 readlist = []
