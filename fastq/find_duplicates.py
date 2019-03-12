@@ -6,7 +6,6 @@ subsets = {}
 
 for item in degenerate_product:
     subsets[item] = []
-print sys.argv[1]
 infile = sys.stdin
 outfile = sys.stdout
 
