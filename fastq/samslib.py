@@ -63,6 +63,12 @@ class fastq_read(object):
             self.readdict['readname_clustery']
         )
 
+    def getindexsequence(self):
+        return self.readdict['readname_indexsequence']
+
+    def putindex(self, sequence):
+        self.readdict['readname_indexsequence'] = sequence
+
     def degenerate(self):
         return self.readdict['degenerateidx']
     
