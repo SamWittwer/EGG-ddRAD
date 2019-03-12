@@ -5,7 +5,7 @@ import getopt
 
 def loadargs():
     """This function loads the command line arguments and starts main"""
-    readfile = None
+    readfile = sys.stdin
     illumina_idx = None
     outputfile = None
     print 'STARTING'
@@ -16,7 +16,7 @@ def loadargs():
         sys.exit(2)
     for opt, arg in opts:
         if opt in ('-r', '--reads'):
-            readfile = arg
+            readfile = open(arg, 'r')
         if opt in ('-i', '--index'):
             illumina_idx = arg.split(',')
         if opt in ('-o', '--output'):
@@ -30,13 +30,27 @@ def loadargs():
 
 
 def main(readfile, idx, outfile, outprefix):
-    readdict = f.fastqtodict(readfile)
+    readdict = fastqtodict(readfile)
     for i, index in enumerate(idx):
         with open(outprefix + outfile[i] + '.fastq', 'w') as o:
             for element in readdict:
                 if element.split('_')[1].strip().startswith(index):
                     o.write('{}\n{}\n+\n{}\n'.format(element.strip(), readdict[element][0], readdict[element][1]))
 
+
+def fastqtodict(fastqfileobj):
+    """generic function to read fastq. Ignores Q score line. in: fastq filename out: dict {readname:seq}"""
+    counter = None
+    readname = None
+    seqdict = {}
+    for line in fastqfileobj:
+        if line.startswith('@'):
+            readname = line.split(' ')[0]
+            counter = 1
+        if counter == 2:
+            seqdict[readname] = line.strip()
+        counter += 1
+    return seqdict
 
 def help():
     print 'HELP'
