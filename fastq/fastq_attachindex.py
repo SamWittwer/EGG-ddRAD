@@ -15,12 +15,13 @@ with open(indexfile, 'r') as idx:
     for line in idx:
         if counter == 0:
             readname = line.strip().split(' ')[0]
-        if counter == 3:
+        if counter == 1:
             idxdict[readname] = line.strip()
             readname = None
             counter = 0
+        if counter == 3:
+            counter = 0
         elif counter < 3:
-            readlist.append(line)
             counter += 1
 ## reading in reads one by one and writing out
 
