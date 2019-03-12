@@ -18,7 +18,6 @@ with open(indexfile, 'r') as idx:
         if counter == 1:
             idxdict[readname] = line.strip()
             readname = None
-            counter = 0
         if counter == 3:
             counter = 0
         elif counter < 3:
