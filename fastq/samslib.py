@@ -6,21 +6,21 @@ class fastq_read(object):
         readlist[1] = readlist[1].strip()
         readlist[2] = readlist[2].strip()
         readlist[3] = readlist[3].strip()
-        list_readname_1 = readlist[0].split(' ')[0].split(':')
-        list_readname_2 = readlist[0].split(' ')[1].split(':')
+        self.list_readname_1 = readlist[0].split(' ')[0].split(':')
+        self.list_readname_2 = readlist[0].split(' ')[1].split(':')
 
-        self.readdict['readname_instrument'] = list_readname_1[0][1:]
-        self.readdict['readname_runid'] = list_readname_1[1]
-        self.readdict['readname_flowcellid'] = list_readname_1[2]
-        self.readdict['readname_flowcelllane'] = list_readname_1[3]
-        self.readdict['readname_flowcelltile'] = list_readname_1[4]
-        self.readdict['readname_clusterx'] = list_readname_1[5]
-        self.readdict['readname_clustery'] = list_readname_1[6]
+        self.readdict['readname_instrument'] = self.list_readname_1[0][1:]
+        self.readdict['readname_runid'] = self.list_readname_1[1]
+        self.readdict['readname_flowcellid'] = self.list_readname_1[2]
+        self.readdict['readname_flowcelllane'] = self.list_readname_1[3]
+        self.readdict['readname_flowcelltile'] = self.list_readname_1[4]
+        self.readdict['readname_clusterx'] = self.list_readname_1[5]
+        self.readdict['readname_clustery'] = self.list_readname_1[6]
 
-        self.readdict['readname_pairmember'] = list_readname_2[0]
-        self.readdict['readname_filterflag'] = list_readname_2[1]
-        self.readdict['readname_controlbits'] = list_readname_2[2]
-        self.readdict['readname_indexsequence'] = list_readname_2[3]
+        self.readdict['readname_pairmember'] = self.list_readname_2[0]
+        self.readdict['readname_filterflag'] = self.list_readname_2[1]
+        self.readdict['readname_controlbits'] = self.list_readname_2[2]
+        self.readdict['readname_indexsequence'] = self.list_readname_2[3]
         
         self.readdict['sequence'] = readlist[1]
         
@@ -37,7 +37,7 @@ class fastq_read(object):
             self.readdict['readname_instrument'],
             self.readdict['readname_runid'],
             self.readdict['readname_flowcellid'],
-            self.readdict['flowcelllane'],
+            self.readdict['readname_flowcelllane'],
             self.readdict['readname_flowcelltile'],
             self.readdict['readname_clusterx'],
             self.readdict['readname_clustery'],
@@ -51,7 +51,18 @@ class fastq_read(object):
             self.readdict['sequence'], 
             self.readdict['spacer'], 
             self.readdict['qualityscores'])
-            
+
+    def getreadname(self):
+        return '@{}:{}:{}:{}:{}:{}:{}'.format(
+            self.readdict['readname_instrument'],
+            self.readdict['readname_runid'],
+            self.readdict['readname_flowcellid'],
+            self.readdict['readname_flowcelllane'],
+            self.readdict['readname_flowcelltile'],
+            self.readdict['readname_clusterx'],
+            self.readdict['readname_clustery']
+        )
+
     def degenerate(self):
         return self.readdict['degenerateidx']
     
