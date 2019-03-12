@@ -38,6 +38,6 @@ for degenerate in degenerate_product:
             passedcounter += 1
             totalreadspassed += 1
             outfile.write(singleread.fastq_writestring())
-    print '{}: duplicates: {} passed: {}'.format(degenerate, PCRduplicatecounter, passedcounter)
-print totalreadspassed
+    #print '{}: duplicates: {} passed: {}'.format(degenerate, PCRduplicatecounter, passedcounter)
+#print totalreadspassed
 outfile.close()
