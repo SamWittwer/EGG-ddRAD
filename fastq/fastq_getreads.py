@@ -2,7 +2,7 @@ import sys
 
 instream = sys.stdin
 outstream = sys.stdout
-targetlength = 150
+targetlength = sys.argv[1]
 
 counter = 1
 for line in instream:
