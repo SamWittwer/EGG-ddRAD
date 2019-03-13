@@ -9,7 +9,7 @@ keepread = False
 for line in instream:
     if counter == 1:
         readname = line.strip()
-        if readname.split(' ')[1].startswith(index):
+        if readname.split(' ')[1].split(':')[-1].startswith(index):
             keepread = True
     if counter == 2 and keepread:
         readseq = line.strip()
