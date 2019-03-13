@@ -27,14 +27,18 @@ with open(indexfile, 'r') as idx:
 counter = 0
 readlist_read = []
 for line in readstream:
-    if counter == 3:
-        readlist_read.append(line)
-        readobj = samslib.fastq_read(readlist_read)
-        if readobj.getreadname() in idxdict:
-            readobj.putindex(idxdict[readobj.getreadname()].sequence())
-            outstream.write(readobj.fastq_writestring())
-        readlist_read = []
-        counter = 0
-    elif counter < 3:
-        readlist_read.append(line)
-        counter += 1
+    if line:
+        if counter == 3:
+            readlist_read.append(line)
+            readobj = samslib.fastq_read(readlist_read)
+            if readobj.getreadname() in idxdict:
+                readobj.putindex(idxdict[readobj.getreadname()].sequence())
+                outstream.write(readobj.fastq_writestring())
+            readlist_read = []
+            counter = 0
+        elif counter < 3:
+            readlist_read.append(line)
+            counter += 1
+readstream.close()
+idxdict = None
+sys.exit()

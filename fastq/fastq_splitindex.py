@@ -34,7 +34,7 @@ def main(readfile, idx, outfile, outprefix):
     for i, index in enumerate(idx):
         with open(outprefix + outfile[i] + '.fastq', 'w') as o:
             for element in readdict:
-                if element.split('_')[1].strip().startswith(index):
+                if element.split(' ')[1].strip().split(':')[-1].startswith(index):
                     o.write('{}\n{}\n+\n{}\n'.format(element.strip(), readdict[element][0], readdict[element][1]))
 
 
