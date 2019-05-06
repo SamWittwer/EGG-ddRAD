@@ -30,7 +30,8 @@ with open(sys.argv[1]) as v:
                      'T': {'A': 'W', 'C': 'Y', 'G': 'K', 'T': 'T', 'N': 'N'},
                      'N': {'A': 'N', 'C': 'N', 'G': 'N', 'T': 'N', 'N': 'N'}}
 
-    for line in v:
+    for lineno, line in enumerate(v):
+        print lineno
         if line.startswith('#CHROM'):
             #extract individual names from last header line
             names = line.strip().split('\t')[9:]
