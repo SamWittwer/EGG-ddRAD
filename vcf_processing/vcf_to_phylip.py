@@ -1,9 +1,12 @@
 #! /usr/bin/python
 
 #usage:
-# vcf_to_phylip.py infile.vcf outfile.phy
+# vcf_to_phylip.py infile.vcf outfile.phy format
+#format can be fasta or phy
 
 import sys
+
+outformat = sys.argv[3]
 
 def translateind(individual, d):
     #takes list of one ind, returns bases
@@ -56,7 +59,13 @@ with open(sys.argv[1]) as v:
             #append each base to appropriate list in LOL
             [indLOL[i].append(j) for i, j in enumerate(indlist_consensus)]
 
+
     #write output in sequential phylip format
-    with open(sys.argv[2], 'w') as o:
-        for idx, ind in enumerate(names):
-            o.write(ind + '\t' + ''.join(partitionind(indLOL[idx])))
+    if outformat == 'phy':
+        with open(sys.argv[2], 'w') as o:
+            for idx, ind in enumerate(names):
+                o.write(ind + '\t' + ''.join(partitionind(indLOL[idx])))
+    elif outformat == 'fasta':
+        with open(sys.argv[2], 'w') as o:
+            for idx, ind in enumerate(names):
+                o.write(ind + '\t' + ''.join(indLOL[idx]) + '\n')
