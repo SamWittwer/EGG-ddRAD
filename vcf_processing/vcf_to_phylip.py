@@ -63,6 +63,7 @@ with open(sys.argv[1]) as v:
     #write output in sequential phylip format
     if outformat == 'phy':
         with open(sys.argv[2], 'w') as o:
+            o.write('{}\t{}\n'.format(len(indLOL), len(indLOL[0])))
             for idx, ind in enumerate(names):
                 o.write(ind + '\t' + ''.join(partitionind(indLOL[idx])))
     elif outformat == 'fasta':
