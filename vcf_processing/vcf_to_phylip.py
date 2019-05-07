@@ -71,4 +71,4 @@ with open(sys.argv[1]) as v:
     elif outformat == 'fasta':
         with open(sys.argv[2], 'w') as o:
             for idx, ind in enumerate(names):
-                o.write(ind + '\t' + ''.join(indLOL[idx]) + '\n')
+                o.write('>' + ind + '\n' + ''.join(partitionind(indLOL[idx])))
