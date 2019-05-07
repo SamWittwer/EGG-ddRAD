@@ -34,7 +34,9 @@ with open(sys.argv[1]) as v:
                      'N': {'A': 'N', 'C': 'N', 'G': 'N', 'T': 'N', 'N': 'N'}}
 
     for lineno, line in enumerate(v):
-        print lineno
+        if lineno%1000 == 0:
+            print lineno
+
         if line.startswith('#CHROM'):
             #extract individual names from last header line
             names = line.strip().split('\t')[9:]
@@ -65,7 +67,7 @@ with open(sys.argv[1]) as v:
         with open(sys.argv[2], 'w') as o:
             o.write('{}\t{}\n'.format(len(indLOL), len(indLOL[0])))
             for idx, ind in enumerate(names):
-                o.write(ind + '\t' + ''.join(partitionind(indLOL[idx])))
+                o.write(ind + ' '*(10 - len(ind)) + ''.join(partitionind(indLOL[idx])))
     elif outformat == 'fasta':
         with open(sys.argv[2], 'w') as o:
             for idx, ind in enumerate(names):
