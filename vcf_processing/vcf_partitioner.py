@@ -15,3 +15,4 @@ with open(sys.argv[1], 'r') as v:
                 scaffoldcounts[scaffold] = 1
 
 print scaffoldorder
+print scaffoldcounts
