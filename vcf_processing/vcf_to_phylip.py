@@ -19,10 +19,14 @@ def consensusind(individual, d):
 
 def partitionind(indaslist, partitionlength = 1000):
     nparts = int(len(indaslist)/float(partitionlength))
+    #print 'NPARTS', nparts
     returnlist = []
-    for i in range(nparts):
-        returnlist.append(''.join(indaslist[i*partitionlength:(i+1)*partitionlength - 1]) + '\n')
-    returnlist.append(''.join(indaslist[(i+1)*partitionlength:len(indaslist) - 1]) + '\n')
+    if nparts >= 1:
+        for i in range(nparts):
+            returnlist.append(''.join(indaslist[i*partitionlength:(i+1)*partitionlength]) + '\n')
+        returnlist.append(''.join(indaslist[(i+1)*partitionlength:len(indaslist) - 1]) + '\n')
+    else:
+        returnlist.append(''.join(indaslist) + '\n')
     return returnlist
 
 
@@ -32,7 +36,7 @@ with open(sys.argv[1]) as v:
                      'G': {'A': 'R', 'C': 'S', 'G': 'G', 'T': 'K', 'N': 'N'},
                      'T': {'A': 'W', 'C': 'Y', 'G': 'K', 'T': 'T', 'N': 'N'},
                      'N': {'A': 'N', 'C': 'N', 'G': 'N', 'T': 'N', 'N': 'N'}}
-
+    counter = 0
     for lineno, line in enumerate(v):
         if lineno%1000 == 0:
             print lineno
@@ -44,6 +48,9 @@ with open(sys.argv[1]) as v:
 
         #non-header lines:
         if not line.startswith('#'):
+            counter += 1
+            if counter % 1000 == 0:
+                print counter
             linelist = line.strip().split('\t')
 
             #extract REF and ALT allele from line and set up dict
@@ -60,14 +67,16 @@ with open(sys.argv[1]) as v:
 
             #append each base to appropriate list in LOL
             [indLOL[i].append(j) for i, j in enumerate(indlist_consensus)]
-
+    print counter
 
     #write output in sequential phylip format
     if outformat == 'phy':
         with open(sys.argv[2], 'w') as o:
             o.write('{}\t{}\n'.format(len(indLOL), len(indLOL[0])))
             for idx, ind in enumerate(names):
-                o.write(ind + ' '*(10 - len(ind)) + ''.join(partitionind(indLOL[idx])))
+                o.write(ind + ' '*(10 - len(ind)) + ''.join(''.join(partitionind(indLOL[idx], partitionlength=1000))))
+            #for idx, ind in enumerate(names):
+            #    o.write(ind + ' '*(10 - len(ind)) + ''.join(partitionind(indLOL[idx])))
     elif outformat == 'fasta':
         with open(sys.argv[2], 'w') as o:
             for idx, ind in enumerate(names):
