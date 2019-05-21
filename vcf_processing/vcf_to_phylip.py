@@ -24,7 +24,7 @@ def partitionind(indaslist, partitionlength = 1000):
     if nparts >= 1:
         for i in range(nparts):
             returnlist.append(''.join(indaslist[i*partitionlength:(i+1)*partitionlength]) + '\n')
-        returnlist.append(''.join(indaslist[(i+1)*partitionlength:len(indaslist) - 1]) + '\n')
+        returnlist.append(''.join(indaslist[(i+1)*partitionlength:len(indaslist)]) + '\n')
     else:
         returnlist.append(''.join(indaslist) + '\n')
     return returnlist
