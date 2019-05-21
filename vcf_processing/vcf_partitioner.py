@@ -15,6 +15,7 @@ with open(sys.argv[1], 'r') as v:
                 scaffoldcounts[scaffold] = 1
 
 currentpos = 1
-for scaff in scaffoldorder:
-    print '{}-{}'.format(currentpos, currentpos + scaffoldcounts[scaff])
-    currentpos += scaffoldcounts[scaff]
+with open(sys.argv[2], 'w') as o:
+    for scaff in scaffoldorder:
+        o.write('{}-{}'.format(currentpos, currentpos + scaffoldcounts[scaff] - 1))
+        currentpos += scaffoldcounts[scaff]
