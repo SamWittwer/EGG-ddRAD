@@ -1,7 +1,7 @@
 #! /usr/bin/python
 
 #usage:
-# vcf_to_phylip.py infile.vcf outfile.phy format
+# vcf_to_phylip.py infile.vcf outfile.phy format part|nopart
 #format can be fasta or phy
 
 import sys
@@ -17,7 +17,7 @@ def consensusind(individual, d):
     return d[individual[0]][individual[1]]
 
 
-def partitionind(indaslist, partitionlength = int(sys.argv[3])):
+def partitionind(indaslist, partitionlength = 1000):
     nparts = int(len(indaslist)/float(partitionlength))
     #print 'NPARTS', nparts
     returnlist = []
@@ -73,8 +73,12 @@ with open(sys.argv[1]) as v:
     if outformat == 'phy':
         with open(sys.argv[2], 'w') as o:
             o.write('{}\t{}\n'.format(len(indLOL), len(indLOL[0])))
-            for idx, ind in enumerate(names):
-                o.write(ind + ' '*(10 - len(ind)) + ''.join(''.join(partitionind(indLOL[idx], partitionlength=1000))))
+            if sys.argv[3] == 'part':
+                for idx, ind in enumerate(names):
+                    o.write(ind + ' '*(10 - len(ind)) + ''.join(''.join(partitionind(indLOL[idx], partitionlength=1000))))
+            elif sys.argv[3] == 'nopart':
+                for idx, ind in enumerate(names):
+                    o.write(ind + ' '*(10 - len(ind)) + ''.join(indLOL[idx]))
             #for idx, ind in enumerate(names):
             #    o.write(ind + ' '*(10 - len(ind)) + ''.join(partitionind(indLOL[idx])))
     elif outformat == 'fasta':
