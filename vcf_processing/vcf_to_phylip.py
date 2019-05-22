@@ -80,7 +80,7 @@ with open(sys.argv[1]) as v:
         with open(sys.argv[2], 'w') as o:
             o.write('{}\t{}\n'.format(len(indLOL), len(indLOL[0])))
             for idx, ind in enumerate(names):
-                o.write(ind + ' '*(10 - len(ind)) + ''.join(indLOL[idx]))
+                o.write(ind + ' '*(10 - len(ind)) + ''.join(indLOL[idx]) + '\n')
 
 
     elif outformat == 'fasta':
