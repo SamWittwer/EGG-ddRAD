@@ -17,7 +17,7 @@ def consensusind(individual, d):
     return d[individual[0]][individual[1]]
 
 
-def partitionind(indaslist, partitionlength = 1000):
+def partitionind(indaslist, partitionlength = int(sys.argv[3])):
     nparts = int(len(indaslist)/float(partitionlength))
     #print 'NPARTS', nparts
     returnlist = []
