@@ -38,8 +38,8 @@ with open(sys.argv[1]) as v:
                      'N': {'A': 'N', 'C': 'N', 'G': 'N', 'T': 'N', 'N': 'N'}}
     counter = 0
     for lineno, line in enumerate(v):
-        if lineno%1000 == 0:
-            print lineno
+        #if lineno%1000 == 0:
+        #    print lineno
 
         if line.startswith('#CHROM'):
             #extract individual names from last header line
@@ -49,7 +49,7 @@ with open(sys.argv[1]) as v:
         #non-header lines:
         if not line.startswith('#'):
             counter += 1
-            if counter % 1000 == 0:
+            if counter % 10000 == 0:
                 print counter
             linelist = line.strip().split('\t')
 
