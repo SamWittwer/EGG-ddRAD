@@ -40,7 +40,7 @@ for i, entry in enumerate(sequenceLoL):
             currentfasta = '{}_{}'.format(entry[0], entry[1])
             fastareaddict[currentfasta] = [entry[2]]
 
-with open('out.fasta', 'w') as o:
+with open('Tursiops_ddRAD_loci.fasta', 'w') as o:
     for key in fastareaddict:
         if len(fastareaddict[key]) > 25:
             o.write('>{}\n{}\n'.format(key, ''.join(fastareaddict[key])))

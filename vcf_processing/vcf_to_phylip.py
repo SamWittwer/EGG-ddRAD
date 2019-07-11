@@ -38,13 +38,16 @@ with open(sys.argv[1]) as v:
                      'N': {'A': 'N', 'C': 'N', 'G': 'N', 'T': 'N', 'N': 'N'}}
     counter = 0
     for lineno, line in enumerate(v):
+        #print line
         #if lineno%1000 == 0:
         #    print lineno
 
         if line.startswith('#CHROM'):
             #extract individual names from last header line
             names = line.strip().split('\t')[9:]
+
             indLOL = [[] for i in range(len(names))]
+
 
         #non-header lines:
         if not line.startswith('#'):
@@ -52,12 +55,24 @@ with open(sys.argv[1]) as v:
             if counter % 10000 == 0:
                 print counter
             linelist = line.strip().split('\t')
+            #print linelist
 
             #extract REF and ALT allele from line and set up dict
-            linealleledict = {'.':'N', '0':linelist[3], '1':linelist[4]}
+            linealleledict = {'.':'N', '0':linelist[3]}
+
+            if linelist[4] != '.':
+                for offset, allele in enumerate(linelist[4].split(',')):
+                    linealleledict[str(offset + 1)] = allele
+
+            #linealleledict = {'.':'N', '0':linelist[3], '1':linelist[4]}
+            #print linealleledict
 
             #make list of lists per individual
-            indlist = [x.split(':')[0].split('/') for x in linelist[9:]]
+            #print linelist
+            indGTs = [x.split(':')[0] for x in linelist[9:]]
+            indlist = [['.', '.'] if x == '.' else x.split('/') for x in indGTs]
+
+
 
             #translate bases per individual
             indlist_nuc = [translateind(i, linealleledict) for i in indlist]
