@@ -17,12 +17,12 @@ queue = [path_queue + x for x in os.listdir(path_queue)]
 
 sys.stdout.write('found a total of {} scripts in folder {}\n'.format(len(queue), path_queue))
 while True:
-    sys.stdout.write('{} processes currently running!'.format(len(proclist)))
+    sys.stdout.write('{} processes currently running!\n'.format(len(proclist)))
     if proclist:
         procstoremove = []
         for i, p in enumerate(proclist):
             if p.poll() == 0:
-                print 'deleting proc {}'.format(p.pid)
+                sys.stdout.write('deleting proc {}\n'.format(p.pid))
                 procstoremove.append(i)
         for number in procstoremove:
             del proclist[number]
@@ -31,14 +31,15 @@ while True:
         try:
             currenttask = queue.pop()
         except IndexError:
-            print 'queue empty!'
+            sys.stdout.write('queue empty!\n')
             if not proclist:
-                print 'proclist empty!'
+                sys.stdout.write('proclist empty!\n')
                 break
         else:
-            sys.stdout.write('starting to process script {}'.format(currenttask))
+            sys.stdout.write('starting to process script {}\n'.format(currenttask))
             proclist.append(sub.Popen([currenttask]))
-            print [x.pid for x in proclist]
-            print [x.poll() for x in proclist]
+            sys.stdout.write('new process {} started!\n'.format(proclist[-1].pid))
+            #print [x.pid for x in proclist]
+            #print [x.poll() for x in proclist]
     time.sleep(1)
 print 'FINISHED'
