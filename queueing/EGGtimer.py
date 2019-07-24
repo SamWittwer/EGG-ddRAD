@@ -21,7 +21,7 @@ queue = [path_queue + x for x in os.listdir(path_queue)]
 with open('queuelog.txt', 'a') as logfile:
     logfile.write('{} - found a total of {} scripts in folder {}\n'.format(datetime.datetime.now(), queue, path_queue))
     while True:
-        logfile.write('{} - {} processes currently running!\n'.format(datetime.datetime.now(), len(proclist)))
+        #logfile.write('{} - {} processes currently running!\n'.format(datetime.datetime.now(), len(proclist)))
         if proclist:
             procstoremove = []
             for i, p in enumerate(proclist):
