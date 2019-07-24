@@ -3,7 +3,7 @@
 #### x = absolute path to directory containing bash scripts to be queued
 #### y = number of parallel subprocesses to spawn
 
-import subprocess
+import subprocess as sub
 import os
 import time
 import sys
