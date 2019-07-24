@@ -16,7 +16,7 @@ for f in filelist:
     -verbosity INFO \
     --include-non-variant-sites \
     -O vcf/chapter_02_{}.vcf'
-    with open('bash_queueing_scripts/{}.sh', 'w') as outfile:
+    with open('bash_queueing_scripts/{}.sh'.format(filenum), 'w') as outfile:
         outfile.write('#!/bin/bash\n')
         outfile.write(outstring.format(f, filenum))
 
