@@ -11,13 +11,13 @@ import sys
 path_queue = sys.argv[1]
 maxprocesses = sys.argv[2]
 
-print [path_queue + x for x in os.listdir(path_queue)]
-
 proclist = []
 runningprocesses = 0
 queue = [path_queue + x for x in os.listdir(path_queue)]
+
+sys.stdout.write('found a total of {} scripts in folder {}\n'.format(len(queue), path_queue))
 while True:
-    print '##############################'
+    sys.stdout.write('{} processes currently running!'.format(len(proclist)))
     if proclist:
         procstoremove = []
         for i, p in enumerate(proclist):
@@ -28,7 +28,6 @@ while True:
             del proclist[number]
 
     if len(proclist) <= 5:
-        print 'starting new subprocess'
         try:
             currenttask = queue.pop()
         except IndexError:
@@ -37,9 +36,9 @@ while True:
                 print 'proclist empty!'
                 break
         else:
+            sys.stdout.write('starting to process script {}'.format(currenttask))
             proclist.append(sub.Popen([currenttask]))
             print [x.pid for x in proclist]
             print [x.poll() for x in proclist]
-            print 'waiting one second before starting next'
     time.sleep(1)
-print [x.poll() for x in proclist]
+print 'FINISHED'
