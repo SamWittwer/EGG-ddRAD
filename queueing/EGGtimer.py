@@ -23,6 +23,7 @@ with open('queuelog.txt', 'a') as logfile:
     while True:
         #logfile.write('{} - {} processes currently running!\n'.format(datetime.datetime.now(), len(proclist)))
         if proclist:
+            # if there are one or more processes running, check if any of them have finished
             procstoremove = []
             for i, p in enumerate(proclist):
                 if p.poll() == 0:
@@ -32,14 +33,19 @@ with open('queuelog.txt', 'a') as logfile:
                 del proclist[number]
 
         if len(proclist) < maxprocesses:
+            # as long as the list of processes is below the max, spawn a new subprocess
             try:
                 currenttask = queue.pop()
             except IndexError:
+                # queue is empty, flood the logfile -.-
+                # TODO: change this!
                 logfile.write('{} - queue empty!\n'.format(datetime.datetime.now()))
                 if not proclist:
+                    # all processes killed or deleted, break out of while loop and end
                     logfile.write('{} - proclist empty!\n'.format(datetime.datetime.now()))
                     break
             else:
+                # spawn a new process
                 logfile.write('{} - starting to process script {}\n'.format(datetime.datetime.now(), currenttask))
                 proclist.append(sub.Popen([currenttask]))
                 logfile.write('{} - new process {} started!\n'.format(datetime.datetime.now(), proclist[-1].pid))
