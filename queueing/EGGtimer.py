@@ -1,7 +1,7 @@
 #### Custom queueing script
 #### usage: EGGtimer.py x y
 #### x = absolute path to directory containing bash scripts to be queued
-#### y = number of parallel subprocesses to spawn 
+#### y = number of parallel subprocesses to spawn
 
 import subprocess
 import os
@@ -11,7 +11,7 @@ import sys
 path_queue = sys.argv[1]
 maxprocesses = sys.argv[2]
 
-print os.listdir(path_queue)
+print [path_queue + x for x in os.listdir(path_queue)]
 
 #proclist = []
 #runningprocesses = 0
