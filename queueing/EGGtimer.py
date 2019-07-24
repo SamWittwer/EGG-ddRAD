@@ -1,7 +1,7 @@
 #### Custom queueing script
 #### usage: EGGtimer.py x y
 #### x = absolute path to directory containing bash scripts to be queued
-#### y = number of parallel subprocesses to spawn
+#### y = number of parallel subprocesses to spawn 
 
 import subprocess
 import os
