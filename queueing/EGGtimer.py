@@ -9,7 +9,7 @@ import time
 import sys
 
 path_queue = sys.argv[1]
-maxprocesses = sys.argv[2]
+maxprocesses = int(sys.argv[2])
 
 proclist = []
 runningprocesses = 0
@@ -27,7 +27,7 @@ while True:
         for number in procstoremove:
             del proclist[number]
 
-    if len(proclist) <= 5:
+    if len(proclist) < maxprocesses:
         try:
             currenttask = queue.pop()
         except IndexError:
