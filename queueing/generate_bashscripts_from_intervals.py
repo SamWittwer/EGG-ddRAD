@@ -6,7 +6,7 @@ for f in filelist:
     filenum = f.split('_')[-1].split('.')[0]
     outstring = '~/00_software/gatk-4.1.1.0/gatk --java-options "-Xmx4g" GenotypeGVCFs \
 -R ~/chapter_02_australis/reference/Tur_tru_v1/Turtru_2.fasta \
--V gendb://genomicsdb \
+-V gendb://genomicsdb_20190724 \
 --intervals {} \
 --tmp-dir ./tmp \
 -A MappingQuality \
@@ -15,7 +15,7 @@ for f in filelist:
 -A AlleleFraction \
 -verbosity INFO \
 --include-non-variant-sites \
--O ./vcf/chapter_02_{}.vcf'
+-O ./joint_variantcall_intervals/chapter_02_{}.vcf'
     with open('bash_queueing_scripts/{}.sh'.format(filenum), 'w') as outfile:
         outfile.write('#!/bin/bash\n')
         outfile.write(outstring.format(f, filenum))
