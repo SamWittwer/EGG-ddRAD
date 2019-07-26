@@ -24,12 +24,14 @@ with open('queuelog.txt', 'a') as logfile:
             procstoremove = []
             for i, p in enumerate(proclist):
                 if p.poll() == 0:
-                    logfile.write('{} - deleting proc {}\n'.format(datetime.datetime.now(), p.pid))
-                    procstoremove.append(i)
+                    logfile.write('{} - proc {} is finished!\n'.format(datetime.datetime.now(), p.pid))
+
 
             # if there are finished processes, kick them out of the running process list
-            for number in procstoremove:
-                del proclist[number]
+            try:
+                proclist = [x for x in proclist if x != None]
+            except ValueError:
+                pass
 
         if len(proclist) < maxprocesses:
             # if len(list of processes) is below the max, spawn a new subprocess
