@@ -25,6 +25,8 @@ with open('queuelog.txt', 'a') as logfile:
             for i, p in enumerate(proclist):
                 if p.poll() == 0:
                     logfile.write('{} - proc {} is finished!\n'.format(datetime.datetime.now(), p.pid))
+            print proclist
+            print [x.poll() for x in proclist]
 
 
             # if there are finished processes, kick them out of the running process list
