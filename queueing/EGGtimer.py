@@ -32,8 +32,8 @@ with open('queuelog.txt', 'a') as logfile:
             # if there are finished processes, kick them out of the running process list
             try:
                 proclist = [x for x in proclist if x.poll() == None]
-                print 'NEW PROCLIST'
-                print [x.poll() for x in proclist]
+                #print 'NEW PROCLIST'
+                #print [x.poll() for x in proclist]
             except ValueError:
                 pass
 
@@ -57,7 +57,7 @@ with open('queuelog.txt', 'a') as logfile:
                 logfile.write('{} - new process {} started!\n'.format(datetime.datetime.now(), proclist[-1].pid))
 
         # execute while loop every second to check for finished processes
-        time.sleep(1)
+        time.sleep(0.5)
 
     # program finishes, finalize log file
     logfile.write('{} - FINISHED'.format(datetime.datetime.now()))
