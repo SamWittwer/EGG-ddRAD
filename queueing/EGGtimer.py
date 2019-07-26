@@ -31,7 +31,9 @@ with open('queuelog.txt', 'a') as logfile:
 
             # if there are finished processes, kick them out of the running process list
             try:
-                proclist = [x for x in proclist if x != None]
+                proclist = [x for x in proclist if x == None]
+                print 'NEW PROCLIST'
+                print proclist
             except ValueError:
                 pass
 
