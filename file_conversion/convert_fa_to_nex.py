@@ -1,4 +1,4 @@
-with open('australis_afterbugfix_namesfixed.fa', 'r') as seqfile, open('australis_partitions_modelpersubset.txt', 'r') as partitions, open('out.nex', 'w') as outnex:
+with open('australis_namesfixed_Oorcaadded.fa', 'r') as seqfile, open('australis_partitions_modelpersubset.txt', 'r') as partitions, open('Oorca_added.nex', 'w') as outnex:
     outnex.write('#NEXUS\n\n')
 
     taxondict = {}
