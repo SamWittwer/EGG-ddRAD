@@ -70,7 +70,7 @@ with open(sys.argv[1]) as v:
             #make list of lists per individual
             #print linelist
             indGTs = [x.split(':')[0] for x in linelist[9:]]
-            indlist = [['.', '.'] if x == '.' else x.split('/') for x in indGTs]
+            indlist = [['.', '.'] if x == '.' else x.replace('|', '/').split('/') for x in indGTs if '/']
 
 
 
