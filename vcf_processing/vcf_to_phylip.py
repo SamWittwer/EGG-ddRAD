@@ -102,6 +102,11 @@ with open(sys.argv[1]) as v:
             [indLOL[i].append(j) for i, j in enumerate(indlist_consensus)]
     print locuslengthlist
     print sum(locuslengthlist)
+    startcoord = 1
+    with open('ddRAD_loci.txt', 'w') as p:
+        for element in locuslengthlist:
+            p.write('{}-{}\t{}\n'.format(startcoord, startcoord + element - 1, element))
+            startcoord += element
     print counter
 
     #write output in sequential phylip format
