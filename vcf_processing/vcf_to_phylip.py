@@ -3,6 +3,7 @@
 #usage:
 # vcf_to_phylip.py infile.vcf outfile.phy format part|nopart
 #format can be fasta or phy
+# 20191007: added ddRAD loci partitioning output
 
 import sys
 
@@ -37,6 +38,7 @@ with open(sys.argv[1]) as v:
                      'T': {'A': 'W', 'C': 'Y', 'G': 'K', 'T': 'T', 'N': 'N'},
                      'N': {'A': 'N', 'C': 'N', 'G': 'N', 'T': 'N', 'N': 'N'}}
     counter = 0
+
     for lineno, line in enumerate(v):
         #print line
         #if lineno%1000 == 0:
@@ -47,15 +49,26 @@ with open(sys.argv[1]) as v:
             names = line.strip().split('\t')[9:]
 
             indLOL = [[] for i in range(len(names))]
+            locusstart = True
 
 
         #non-header lines:
         if not line.startswith('#'):
+
             counter += 1
             if counter % 10000 == 0:
                 print counter
             linelist = line.strip().split('\t')
             #print linelist
+            if locusstart:
+                locusstart = False
+                locuslengthlist = []
+                lengthcount_currentchrom = linelist[0]
+                lengthcount_currentpos = int(linelist[1])
+            else:
+                lengthcount_currentchrom = linelist[0]
+                lengthcount_currentpos = int(linelist[1])
+                print lengthcount_currentchrom, lengthcount_currentpos
 
             #extract REF and ALT allele from line and set up dict
             linealleledict = {'.':'N', '0':linelist[3]}
