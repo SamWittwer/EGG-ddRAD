@@ -62,13 +62,18 @@ with open(sys.argv[1]) as v:
             #print linelist
             if locusstart:
                 locusstart = False
-                locuslengthlist = []
+                locuslengthlist = [1]
                 lengthcount_currentchrom = linelist[0]
                 lengthcount_currentpos = int(linelist[1])
             else:
-                lengthcount_currentchrom = linelist[0]
-                lengthcount_currentpos = int(linelist[1])
-                print lengthcount_currentchrom, lengthcount_currentpos
+                if lengthcount_currentchrom == linelist[0] and int(linelist[1]) - lengthcount_currentpos <= 5:
+                    lengthcount_currentpos = int(linelist[1])
+                    locuslengthlist[-1] += 1
+                else:
+                    lengthcount_currentchrom = linelist[0]
+                    lengthcount_currentpos = int(linelist[1])
+                    locuslengthlist.append(1)
+
 
             #extract REF and ALT allele from line and set up dict
             linealleledict = {'.':'N', '0':linelist[3]}
@@ -95,6 +100,8 @@ with open(sys.argv[1]) as v:
 
             #append each base to appropriate list in LOL
             [indLOL[i].append(j) for i, j in enumerate(indlist_consensus)]
+    print locuslengthlist
+    print sum(locuslengthlist)
     print counter
 
     #write output in sequential phylip format
