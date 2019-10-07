@@ -26,7 +26,7 @@ with open('clean_' + sys.argv[1], 'w') as outfasta, open('clean_' + sys.argv[2],
 
     for ind in clean_inddict:
         print ind
-        outfasta.write('>{}\n{}\n'.format(ind, ''.join(clean_inddict[ind])))
+        #outfasta.write('>{}\n{}\n'.format(ind, ''.join(clean_inddict[ind])))
 
 
 
