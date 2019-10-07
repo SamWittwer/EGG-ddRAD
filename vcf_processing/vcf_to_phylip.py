@@ -61,12 +61,13 @@ with open(sys.argv[1]) as v:
             linelist = line.strip().split('\t')
             #print linelist
             if locusstart:
+                # determine if same ddRAD locus and save locus lengths later for partitioning
                 locusstart = False
                 locuslengthlist = [1]
                 lengthcount_currentchrom = linelist[0]
                 lengthcount_currentpos = int(linelist[1])
             else:
-                if lengthcount_currentchrom == linelist[0] and int(linelist[1]) - lengthcount_currentpos <= 5:
+                if lengthcount_currentchrom == linelist[0] and int(linelist[1]) - lengthcount_currentpos <= 20:
                     lengthcount_currentpos = int(linelist[1])
                     locuslengthlist[-1] += 1
                 else:
