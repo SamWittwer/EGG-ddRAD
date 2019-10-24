@@ -15,6 +15,7 @@ maxprocesses = int(sys.argv[2])
 proclist = []
 runningprocesses = 0
 queue = [path_queue + x for x in os.listdir(path_queue)]
+print queue
 
 with open('queuelog.txt', 'a') as logfile:
     logfile.write('{} - found a total of {} scripts in folder {}\n'.format(datetime.datetime.now(), queue, path_queue))
@@ -25,7 +26,7 @@ with open('queuelog.txt', 'a') as logfile:
             for i, p in enumerate(proclist):
                 if p.poll() == 0:
                     logfile.write('{} - proc {} is finished!\n'.format(datetime.datetime.now(), p.pid))
-            print 'OLD PROCLIST'
+            #print 'OLD PROCLIST'
             print [x.poll() for x in proclist]
 
 

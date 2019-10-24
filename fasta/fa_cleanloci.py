@@ -15,6 +15,10 @@ with open(sys.argv[1], 'r') as fastafile, open(sys.argv[2], 'r') as locifile:
         else:
             inddict[currentind] = [x for x in line.strip()]
 
+
+
+
+
 with open('clean_' + sys.argv[1], 'w') as outfasta, open('clean_' + sys.argv[2], 'w') as outloci:
     clean_inddict = {}
     for ind in inddict:
@@ -24,9 +28,6 @@ with open('clean_' + sys.argv[1], 'w') as outfasta, open('clean_' + sys.argv[2],
         for ind in inddict:
             clean_inddict[ind].append(inddict[ind][element[0]-1:element[1]])
 
-    for ind in clean_inddict:
-        print ind
-        #outfasta.write('>{}\n{}\n'.format(ind, ''.join(clean_inddict[ind])))
 
 
 
