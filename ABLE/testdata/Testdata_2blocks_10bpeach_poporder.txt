@@ -1,6 +1,0 @@
-# This file defines the order of the populations for the blocks
-
-
-TESTPOP2
-TESTPOP1
-

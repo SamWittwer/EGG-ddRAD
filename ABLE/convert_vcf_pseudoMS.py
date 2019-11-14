@@ -1,15 +1,14 @@
 import sys
 
-## usage
-## convert_vcf_pseudoMS.py vcffile gaptolerance
+## this is the newest version and step 1 in the ABLE pipeline.
+
+## convert_vcf_pseudoMS.py <vcffile> <gaptolerance in bp>
+
 ## vcffile: path to vcf file
 ## gaptolerance: gaps in the middle to fill up (N) before starting a new block
 
 ## this script takes a vcf file and partitions it into blocks in *almost* pseudo_MS format.
 ## each line in the output retains the individual name in the beginning to be processed in the next pipeline script
-## Things that need to be done with the output from here:
-## - filter for appropriate block lengths (probably 130bp)
-## - reorder populations for ABLE
 
 ## next script in pipeline: reorder_tmp_pseudoMS.py
 

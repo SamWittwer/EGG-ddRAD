@@ -7,8 +7,8 @@ def all_same(items):
 def transpose(blockseq):
     return '\n'.join([''.join(b) for b in zip(*(r for r in zip(*blockseq) if len(set(r)) > 1))]) + '\n'
 
-with open('realdata\\coastal_allsites_SORTED_120.pseudo_MS', 'r') as infile, \
-    open('realdata\\coastal_allsites_SORTED_120_variantonly.pseudo_MS', 'w') as outfile:
+with open('reordered.tmp', 'r') as infile, \
+    open('reordered_varonly.pseudo_MS', 'w') as outfile:
     sameblocks = 0
     diffblocks = 0
     for counter, line in enumerate(infile):
