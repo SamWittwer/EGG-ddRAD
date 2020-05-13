@@ -18,6 +18,7 @@ for line in i:
     else:
         linespl = line.strip().split('\t')
         formatcol = linespl[8].split(':')
+        print(linespl[5])
         if linespl[5] == '.':
             cleanline = '\t'.join(linespl[:9]) + '\t' + '\t'.join(['./.' if x.startswith('./.') else x for x in linespl[9:]]) + '\n'
         else:
