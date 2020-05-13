@@ -35,7 +35,7 @@ for line in i:
         if linespl[4] == '.':
             formatstring = '\tGT:AD:AB:DP:RGQ\t'
 
-            cleanline = '\t'.join(linespl[:8]) + formatstring + '\t'.join(['./.' if x.startswith('./.') else x for x in linespl[9:]]) + '\n'
+            cleanline = '\t'.join(linespl[:8]) + formatstring + '\t'.join(['./.' if x.startswith('./.') else processmono(x) for x in linespl[9:]]) + '\n'
         else:
             GT = formatcol.index('GT')
             AD = formatcol.index('AD')
