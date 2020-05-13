@@ -8,5 +8,6 @@ for line in i:
         o.write(line)
     else:
         linespl = line.strip().split('\t')
-    
+        print(linespl)
+        break
 
