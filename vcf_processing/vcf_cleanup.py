@@ -23,7 +23,7 @@ for line in i:
         linespl = line.strip().split('\t')
         formatcol = linespl[8].split(':')
         if linespl[4] == '.':
-            formatstring = '\tGT:AD:AB:DP:RGQ\t'
+            formatstring = '\tGT:AD:DP:RGQ\t'
 
             cleanline = '\t'.join(linespl[:8]) + formatstring + '\t'.join(['./.' if x.startswith('./.') else x for x in linespl[9:]]) + '\n'
         else:
