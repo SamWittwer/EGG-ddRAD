@@ -9,7 +9,7 @@ def processind(indstring, gt, ad, dp, gq, pl):
     else:
         indstringsplit = indstring.split(':')
         indstringsplit[gt] = indstringsplit[gt].replace('|', '/')
-        ad_tag = [float(x) for x in indstringsplit[ad].split('.')]
+        ad_tag = [float(x) for x in indstringsplit[ad].split(',')]
         allelicbalance = ad_tag[0]/(ad_tag[0] + ad_tag[1])
         newstringlist = [indstringsplit[gt], indstringsplit[ad], allelicbalance, indstringsplit[dp], indstringsplit[gq], indstringsplit[pl]]
         return ':'.join(newstringlist)
