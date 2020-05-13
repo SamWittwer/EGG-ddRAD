@@ -5,4 +5,5 @@ o = sys.stdout
 
 for line in i:
     linespl = line.strip().split('\t')
-    
+    print(linespl)
+
