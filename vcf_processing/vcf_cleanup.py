@@ -9,7 +9,9 @@ def processind(indstring, gt, ad, dp, gq, pl):
     else:
         indstringsplit = indstring.split(':')
         indstringsplit[gt] = indstringsplit[gt].replace('|', '/')
-        newstringlist = [indstringsplit[gt], indstringsplit[ad], indstringsplit[dp], indstringsplit[gq], indstringsplit[pl]]
+        ad_tag = [float(x) for x in indstringsplit[ad].split('.')]
+        allelicbalance = ad_tag[0]/(ad_tag[0] + ad_tag[1])
+        newstringlist = [indstringsplit[gt], indstringsplit[ad], allelicbalance, indstringsplit[dp], indstringsplit[gq], indstringsplit[pl]]
         return ':'.join(newstringlist)
 
 for line in i:
@@ -27,7 +29,7 @@ for line in i:
             DP = formatcol.index('DP')
             GQ = formatcol.index('PL')
             PL = formatcol.index('PL')
-            cleanline = '\t'.join(linespl[:8]) + '\tGT:AD:DP:GQ:PL\t' + '\t'.join([processind(x, GT, AD, DP, GQ, PL) for x in linespl[9:]]) + '\n'
+            cleanline = '\t'.join(linespl[:8]) + '\tGT:AD:AB:DP:GQ:PL\t' + '\t'.join([processind(x, GT, AD, DP, GQ, PL) for x in linespl[9:]]) + '\n'
         o.write(cleanline)
 
 
