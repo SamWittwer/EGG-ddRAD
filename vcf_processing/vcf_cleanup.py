@@ -16,16 +16,6 @@ def processind(indstring, gt, ad, dp, gq, pl):
         newstringlist = [indstringsplit[gt], indstringsplit[ad], str(round(allelicbalance, 3)), indstringsplit[dp], indstringsplit[gq], indstringsplit[pl]]
         return ':'.join(newstringlist)
 
-def processmono(indstring):
-    indsplit = indstring.split(':')
-    if indsplit[1] == '0,0':
-        return './.'
-    else:
-        adval = [float(x) for x in indsplit[1].split(',')]
-        abval = adval[0]/(adval[0] + adval[1])
-        newindlist = [indsplit[0], indsplit[1], str(round(abval, 3)), indsplit[2], indsplit[3]]
-        return ':'.join(newindlist)
-
 for line in i:
     if line.startswith('#'):
         o.write(line)
@@ -35,7 +25,7 @@ for line in i:
         if linespl[4] == '.':
             formatstring = '\tGT:AD:AB:DP:RGQ\t'
 
-            cleanline = '\t'.join(linespl[:8]) + formatstring + '\t'.join(['./.' if x.startswith('./.') else processmono(x) for x in linespl[9:]]) + '\n'
+            cleanline = '\t'.join(linespl[:8]) + formatstring + '\t'.join(['./.' if x.startswith('./.') else x for x in linespl[9:]]) + '\n'
         else:
             GT = formatcol.index('GT')
             AD = formatcol.index('AD')
