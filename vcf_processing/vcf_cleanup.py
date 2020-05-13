@@ -4,6 +4,9 @@ i = sys.stdin
 o = sys.stdout
 
 for line in i:
-    linespl = line.strip().split('\t')
-    print(linespl)
+    if line.startswith('#'):
+        o.write(line)
+    else:
+        linespl = line.strip().split('\t')
+    
 
