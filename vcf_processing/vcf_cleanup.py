@@ -24,6 +24,6 @@ for line in i:
         GQ = formatcol.index('PL')
         PL = formatcol.index('PL')
         cleanline = '\t'.join(linespl[:8]) + 'GT:AD:DP:GQ:PL\t' + '\t'.join([processind(x, GT, AD, DP, GQ, PL) for x in linespl[9:]]) + '\n'
-        print(cleanline)
+        o.write(cleanline)
 
 
