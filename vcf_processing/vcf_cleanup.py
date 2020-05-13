@@ -4,4 +4,5 @@ i = sys.stdin
 o = sys.stdout
 
 for line in i:
-    print(line)
+    linespl = line.strip().split('\t')
+    
