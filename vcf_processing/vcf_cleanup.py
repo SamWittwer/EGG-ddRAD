@@ -23,7 +23,7 @@ def processmono(indstring):
     else:
         adval = [float(x) for x in indsplit[1].split(',')]
         abval = adval[0]/(adval[0] + adval[1])
-        newindlist = [indlist[0], indlist[1], str(round(abval, 3)), indlist[2], indlist[3]]
+        newindlist = [indsplit[0], indsplit[1], str(round(abval, 3)), indsplit[2], indsplit[3]]
         return ':'.join(newindlist)
 
 for line in i:
