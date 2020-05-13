@@ -7,7 +7,7 @@ def processind(indstring, gt, ad, dp, gq, pl):
     if indstring.startswith('./.'):
         return './.'
     else:
-        instringsplit = indstring.split(':')
+        indstringsplit = indstring.split(':')
         indstringsplit[gt] = indstringsplit[gt].replace('|', '/')
         newstringlist = [indstringsplit[gt], indstringsplit[ad], indstringsplit[dp], indstringsplit[gq], indstringsplit[pl]]
         return ':'.join(newstringlist)
