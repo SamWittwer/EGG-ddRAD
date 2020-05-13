@@ -23,7 +23,7 @@ for line in i:
         DP = formatcol.index('DP')
         GQ = formatcol.index('PL')
         PL = formatcol.index('PL')
-        cleanline = '\t'.join(linespl[:8]) + 'GT:AD:DP:GQ:PL\t' + '\t'.join([processind(x, GT, AD, DP, GQ, PL) for x in linespl[9:]]) + '\n'
+        cleanline = '\t'.join(linespl[:8]) + '\tGT:AD:DP:GQ:PL\t' + '\t'.join([processind(x, GT, AD, DP, GQ, PL) for x in linespl[9:]]) + '\n'
         o.write(cleanline)
 
 
