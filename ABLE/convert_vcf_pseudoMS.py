@@ -1,127 +1,118 @@
+# this script takes a g.vcf file and parses it in /almost/ pseudoMS format
+# usage: python convert_vcf_pseudoMS.py infile.g.vcf outfile.txt gaptolerance(int)
+# gaptolerance: if gap within block, fill up with Ns!
+
+
 import sys
 
-## this is the newest version and step 1 in the ABLE pipeline.
+try:
+    vcfname = sys.argv[1]
+    outname = sys.argv[2]
+    gaptolerance = int(sys.argv[3])
+except IndexError:
+    print('VALUES MISSING!!! RUNNING testdata.vcf, gaptolerance 10, outfile out.txt')
+    vcfname = 'testdata2blocks.vcf'
+    outname = 'out.txt'
+    gaptolerance = 50
 
-## convert_vcf_pseudoMS.py <vcffile> <gaptolerance in bp>
+class SequenceBlock():
+    # class to hold continuous sequence block extracted from vcf and provide methods to parse for pseudo_MS on the fly
+    def __init__(self, CHR, blockstart, individuals):
+        self.CHR = CHR
+        self.blockstart = blockstart
+        self.individualnames = individuals
+        self.individualLOL = [[] for i in range(len(individuals))]
+        self.ambiguitydict = {'A': {'A': 'A', 'C': 'M', 'G': 'R', 'T': 'W', 'N': 'N'},
+                              'C': {'A': 'M', 'C': 'C', 'G': 'S', 'T': 'Y', 'N': 'N'},
+                              'G': {'A': 'R', 'C': 'S', 'G': 'G', 'T': 'K', 'N': 'N'},
+                              'T': {'A': 'W', 'C': 'Y', 'G': 'K', 'T': 'T', 'N': 'N'},
+                              'N': {'A': 'N', 'C': 'N', 'G': 'N', 'T': 'N', 'N': 'N'}}
+        self.POSlist = []
 
-## vcffile: path to vcf file
-## gaptolerance: gaps in the middle to fill up (N) before starting a new block
+    def get_blockname(self):
+        return 'BLOCK_{}_{}_{}_len{}'.format(self.CHR, self.blockstart, self.get_lastpos(), self.get_lastpos() + 1 - self.POSlist[0])
 
-## this script takes a vcf file and partitions it into blocks in *almost* pseudo_MS format.
-## each line in the output retains the individual name in the beginning to be processed in the next pipeline script
+    def get_startingpos(self):
+        return self.blockstart
 
-## next script in pipeline: reorder_tmp_pseudoMS.py
+    def get_lastpos(self):
+        return self.POSlist[-1]
+
+    def get_CHR(self):
+        return self.CHR
+
+    def put_line(self, GTs, pos, REF, ALT):
+        # make sure pos is int
+        self.p = int(pos)
+
+        # fill up sequence with N if there are gaps within the block but within gaptolerance
+        if len(self.POSlist) > 0:
+            while self.p - self.get_lastpos() > 1:
+                self.POSlist.append(self.get_lastpos() + 1)
+                [self.individualLOL[i].append('N') for i, v in enumerate(GTs)]
+
+        # append newest pos
+        self.POSlist.append(self.p)
+
+        def extractBase(individual, REF, ALT):
+            #helper function to translate numerical vcf calls to IUPAC ambiguity code
+            translatedict = {'.': 'N', '0': REF, '1': ALT}
+            indspl = [translatedict[x] for x in individual.replace('|', '/').split('/')]
+            return self.ambiguitydict[indspl[0]][indspl[1]]
+
+        # append each base to each individual
+        [self.individualLOL[i].append(extractBase(v, REF, ALT)) for i, v in enumerate(GTs)]
+
+    def get_parsed(self):
+        # returns a neatly parsed string ready for writing:
+        # blockname
+        # ind1 sequence
+        # indn sequence
+        self.outstring = [self.get_blockname()] + ['{} {}'.format(v, ''.join(self.individualLOL[i])) for i, v in enumerate(self.individualnames)]
+        return '\n'.join(self.outstring) + '\n'
+
+    def get_GT(self):
+        # just for testing
+        print(self.individualLOL)
 
 
-vcfname = sys.argv[1]
-gaptolerance = int(sys.argv[2])
-
-
-def generate_blockname(CHR, POS):
-    # wrapper to generate standardized block names
-    return 'BLOCK_{}_{}'.format(CHR, POS)
-
-
-def extractBase(individual, REF, ALT):
-    # takes a single individual column, gets GT field, parses with REF and ALT, returns single base w/ ambiguitycodes
-    translatedict = {'.': 'N', '0': REF, '1': ALT}
-    indspl = [translatedict[x] for x in individual.split(':')[0].replace('|', '/').split('/')]
-    return indspl
-
-
-with open(vcfname, 'r') as vcffile:
-    blockcounter = 0
-    for line in vcffile:
-        linespl = line.strip().split('\t')
-        # skip all header lines
-
+with open(vcfname, 'r') as infile, open(outname, 'w') as outfile:
+    for line in infile:
         if line.startswith('#CHROM'):
-            # last header line: extract individual names, prep dictionary for all blocks
-            firstdataline = True
+            # last header line, extract names of individuals!
+            individualnames = line.strip().split('\t')[9:]
+            firstline = True
+        elif line.startswith('##'):
+            # regular header lines, ignore!
+            pass
+        else:
+            # actual data lines, process!
+            # individuals start at 9:
 
-            # individualdict: k = individual name, v = dict of blocks with k = blockname from generate_blockname
-            individualdict = {k:{} for k in linespl[9:]}
-
-            # indnames = all individual names. in data lines entries [9:] correspond to each individual (same indexes)
-            indnames = linespl[9:]
-
-        if not line.startswith('#'):
-            # actual data starts here after header lines
-
-            current_CHROM = linespl[0]
-            current_POS = int(linespl[1])
-            REF = linespl[3]
-            ALT = linespl[4]
-            inddata = linespl[9:]
-
-
-            if firstdataline:
-                # very first data line, create first block and add to individual dictionary as empty list
-                last_POS = current_POS
-                last_CHROM = current_CHROM
-                firstdataline = False
-                blockname = generate_blockname(current_CHROM, current_POS)
-                blockcounter += 1
-                print 'newblock {}, {} total'.format(blockname, blockcounter)
-
-                # create new list for the block and add the first base from each individual
-                for x, ind in enumerate(indnames):
-                    individualdict[ind][blockname] = [extractBase(inddata[x], REF, ALT)]
+            #get all GT fields from individual entries, REF[3] and ALT[4] base
+            linesplit = line.strip().split('\t')
+            GTs = [x.split(':')[0] for x in linesplit[9:]]
+            REF = linesplit[3]
+            ALT = linesplit[4]
+            if firstline:
+                currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
+                currentblock.put_line(GTs, linesplit[1], REF, ALT)
+                firstline = False
             else:
-                if last_CHROM == current_CHROM:
-
-                    # current_POS is 1bp from last_POS: append data
-                    if current_POS - last_POS == 1:
-                        for x, ind in enumerate(indnames):
-                            individualdict[ind][blockname].append(extractBase(inddata[x], REF, ALT))
-
-                    # current_POS is > 1bp from last_POS but in gaptolerance: append N until 1bp, append data
-                    elif current_POS - last_POS > 1 and current_POS - last_POS <= gaptolerance:
-                        while current_POS - last_POS > 1:
-                            for x, ind in enumerate(indnames):
-                                individualdict[ind][blockname].append(['N', 'N'])
-                            last_POS += 1
-                        for x, ind in enumerate(indnames):
-                            individualdict[ind][blockname].append(extractBase(inddata[x], REF, ALT))
-                    else:
-                        # current_POS outside of gap tolerance, new block!
-                        blockname = generate_blockname(current_CHROM, current_POS)
-                        blockcounter += 1
-                        print 'newblock {}, {} total'.format(blockname, blockcounter)
-                        for x, ind in enumerate(indnames):
-                            individualdict[ind][blockname] = [extractBase(inddata[x], REF, ALT)]
-
+                if linesplit[0] == currentblock.get_CHR() and int(linesplit[1]) - currentblock.get_lastpos() <= gaptolerance:
+                    # on the same CHR and within gaptolerance
+                    currentblock.put_line(GTs, linesplit[1], REF, ALT)
                 else:
-                    # CHROM not equal. Make new block.
-                    blockname = generate_blockname(current_CHROM, current_POS)
-                    blockcounter += 1
-                    print 'newblock {}, {} total'.format(blockname, blockcounter)
-                    #print blockname
-                    for x, ind in enumerate(indnames):
-                        individualdict[ind][blockname] = [extractBase(inddata[x], REF, ALT)]
+                    # either different CHR or too large gap -> new sequence block
+                    outfile.write(currentblock.get_parsed())
+                    currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
+                    currentblock.put_line(GTs, linesplit[1], REF, ALT)
+    outfile.write(currentblock.get_parsed())
 
-                last_POS = current_POS
-                last_CHROM = current_CHROM
 
-# all the data read in, now make a dictionary per block and not per individual.
-# pop things from old dict to save memory
-blockslist = individualdict[individualdict.keys()[0]].keys()
-perblockdict = {}
-for singleblock in blockslist:
-    perblockdict[singleblock] = {}
-    for individual in individualdict.keys():
-        perblockdict[singleblock][individual] = individualdict[individual][singleblock]
-        individualdict[individual].pop(singleblock, None)
 
-# write output
-with open('{}_gaptol{}.tmp'.format(sys.argv[1], sys.argv[2]), 'w') as o, open('lengths.txt', 'w') as l:
-    for block in perblockdict:
-        o.write('\\\\\n{}_'.format(block))
-        for x, ind in enumerate(sorted(perblockdict[block].keys())):
-            transposedchr1 = ''.join(map(list, zip(*perblockdict[block][ind]))[0])
-            transposedchr2 = ''.join(map(list, zip(*perblockdict[block][ind]))[1])
-            if x == 0:
-                o.write('{}\n'.format(len(transposedchr1)))
-                l.write('{}\n'.format(len(transposedchr1)))
-            o.write('{} {}\n'.format(ind, transposedchr1))
-            o.write('{} {}\n'.format(ind, transposedchr2))
+
+
+
+
+
