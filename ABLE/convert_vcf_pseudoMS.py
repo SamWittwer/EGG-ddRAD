@@ -1,19 +1,13 @@
 # this script takes a g.vcf file and parses it in /almost/ pseudoMS format
-# usage: python convert_vcf_pseudoMS.py infile.g.vcf outfile.txt gaptolerance(int)
+# usage: cat vcf | python convert_vcf_pseudoMS.py gaptolerance(int) > out.txt
 # gaptolerance: if gap within block, fill up with Ns!
 
 
 import sys
 
-try:
-    vcfname = sys.argv[1]
-    outname = sys.argv[2]
-    gaptolerance = int(sys.argv[3])
-except IndexError:
-    print('VALUES MISSING!!! RUNNING testdata.vcf, gaptolerance 10, outfile out.txt')
-    vcfname = 'testdata2blocks.vcf'
-    outname = 'out.txt'
-    gaptolerance = 50
+infile = sys.stdin
+outfile = sys.stdout
+gaptolerance = int(sys.argv[1])
 
 class SequenceBlock():
     # class to hold continuous sequence block extracted from vcf and provide methods to parse for pseudo_MS on the fly
@@ -76,38 +70,38 @@ class SequenceBlock():
         print(self.individualLOL)
 
 
-with open(vcfname, 'r') as infile, open(outname, 'w') as outfile:
-    for line in infile:
-        if line.startswith('#CHROM'):
-            # last header line, extract names of individuals!
-            individualnames = line.strip().split('\t')[9:]
-            firstline = True
-        elif line.startswith('##'):
-            # regular header lines, ignore!
-            pass
-        else:
-            # actual data lines, process!
-            # individuals start at 9:
 
-            #get all GT fields from individual entries, REF[3] and ALT[4] base
-            linesplit = line.strip().split('\t')
-            GTs = [x.split(':')[0] for x in linesplit[9:]]
-            REF = linesplit[3]
-            ALT = linesplit[4]
-            if firstline:
+for line in infile:
+    if line.startswith('#CHROM'):
+        # last header line, extract names of individuals!
+        individualnames = line.strip().split('\t')[9:]
+        firstline = True
+    elif line.startswith('##'):
+        # regular header lines, ignore!
+        pass
+    else:
+        # actual data lines, process!
+        # individuals start at 9:
+
+        #get all GT fields from individual entries, REF[3] and ALT[4] base
+        linesplit = line.strip().split('\t')
+        GTs = [x.split(':')[0] for x in linesplit[9:]]
+        REF = linesplit[3]
+        ALT = linesplit[4]
+        if firstline:
+            currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
+            currentblock.put_line(GTs, linesplit[1], REF, ALT)
+            firstline = False
+        else:
+            if linesplit[0] == currentblock.get_CHR() and int(linesplit[1]) - currentblock.get_lastpos() <= gaptolerance:
+                # on the same CHR and within gaptolerance
+                currentblock.put_line(GTs, linesplit[1], REF, ALT)
+            else:
+                # either different CHR or too large gap -> new sequence block
+                outfile.write(currentblock.get_parsed())
                 currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
                 currentblock.put_line(GTs, linesplit[1], REF, ALT)
-                firstline = False
-            else:
-                if linesplit[0] == currentblock.get_CHR() and int(linesplit[1]) - currentblock.get_lastpos() <= gaptolerance:
-                    # on the same CHR and within gaptolerance
-                    currentblock.put_line(GTs, linesplit[1], REF, ALT)
-                else:
-                    # either different CHR or too large gap -> new sequence block
-                    outfile.write(currentblock.get_parsed())
-                    currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
-                    currentblock.put_line(GTs, linesplit[1], REF, ALT)
-    outfile.write(currentblock.get_parsed())
+outfile.write(currentblock.get_parsed())
 
 
 
