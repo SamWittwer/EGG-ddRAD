@@ -113,7 +113,7 @@ for line in infile:
                 # on the same CHR and within gaptolerance
                 if currentblock.get_blocklength() >= blocklengthmax:
                     # block has already reached defined targetlength -> new block!
-                    outfile.write(currentblock.get_parsed(blocklengthmin))
+                    outfile.write(currentblock.get_parsed(blocklengthmin, blocklengthmax))
                     currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
                     currentblock.put_line(GTs, linesplit[1], REF, ALT)
                 else:
@@ -121,10 +121,10 @@ for line in infile:
                     currentblock.put_line(GTs, linesplit[1], REF, ALT)
             else:
                 # either different CHR or too large gap -> new sequence block
-                outfile.write(currentblock.get_parsed(blocklengthmin))
+                outfile.write(currentblock.get_parsed(blocklengthmin, blocklengthmax))
                 currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
                 currentblock.put_line(GTs, linesplit[1], REF, ALT)
-outfile.write(currentblock.get_parsed(blocklengthmin))
+outfile.write(currentblock.get_parsed(blocklengthmin, blocklengthmax))
 
 
 
