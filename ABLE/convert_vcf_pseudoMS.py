@@ -14,7 +14,7 @@ class SequenceBlock():
     # class to hold continuous sequence block extracted from vcf and provide methods to parse for pseudo_MS on the fly
     def __init__(self, CHR, blockstart, individuals):
         self.CHR = CHR
-        self.blockstart = blockstart
+        self.blockstart = int(blockstart)
         self.individualnames = individuals
         self.individualLOL = [[] for i in range(len(individuals))]
         self.ambiguitydict = {'A': {'A': 'A', 'C': 'M', 'G': 'R', 'T': 'W', 'N': 'N'},
