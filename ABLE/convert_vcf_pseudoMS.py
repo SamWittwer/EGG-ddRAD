@@ -1,5 +1,5 @@
 # this script takes a g.vcf file and parses it in /almost/ pseudoMS format
-# usage: cat vcf | python convert_vcf_pseudoMS.py gaptolerance(int) > out.txt
+# usage: cat vcf | python convert_vcf_pseudoMS.py gaptolerance(int) blocklength > out.txt
 # gaptolerance: if gap within block, fill up with Ns!
 
 
@@ -8,6 +8,7 @@ import sys
 infile = sys.stdin
 outfile = sys.stdout
 gaptolerance = int(sys.argv[1])
+blocklengthtarget = int(sys.argv[2])
 
 class SequenceBlock():
     # class to hold continuous sequence block extracted from vcf and provide methods to parse for pseudo_MS on the fly
@@ -34,6 +35,9 @@ class SequenceBlock():
 
     def get_CHR(self):
         return self.CHR
+
+    def get_blocklength(self):
+        return self.POSlist[-1] + 1 - self.blockstart
 
     def put_line(self, GTs, pos, REF, ALT):
         # make sure pos is int
@@ -102,7 +106,14 @@ for line in infile:
         else:
             if linesplit[0] == currentblock.get_CHR() and int(linesplit[1]) - currentblock.get_lastpos() <= gaptolerance:
                 # on the same CHR and within gaptolerance
-                currentblock.put_line(GTs, linesplit[1], REF, ALT)
+                if currentblock.get_blocklength() >= blocklengthtarget:
+                    # block has already reached defined targetlength -> new block!
+                    outfile.write(currentblock.get_parsed())
+                    currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
+                    currentblock.put_line(GTs, linesplit[1], REF, ALT)
+                else:
+                    # target length not reached yet, append current line to current block
+                    currentblock.put_line(GTs, linesplit[1], REF, ALT)
             else:
                 # either different CHR or too large gap -> new sequence block
                 outfile.write(currentblock.get_parsed())
