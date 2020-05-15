@@ -9,16 +9,18 @@ outstream = sys.stdout
 indtag = False
 blocktag = False
 for line in instream:
-    if '<indnames>' in line:
+    if line.startswith('<indnames>'):
         indtag = True
         indmissingcountdict = {}
-    elif '<block>' in line:
+        continue
+    elif line.startswith('<block>'):
         blocktag = True
         blockseqs = []
+        continue
     if indtag:
-        if not line.startswith('<indlist>'):
-            indmissingcountdict[line.strip()] = 0
-        elif '</indnames>' in line:
+        if line.startswith('</indnames>'):
             indtag = False
-            pass
+            continue
+        else:
+            indmissingcountdict[line.strip()] = 0
 print(indmissingcountdict)
