@@ -93,7 +93,7 @@ for line in infile:
         # last header line, extract names of individuals!
         individualnames = line.strip().split('\t')[9:]
         firstline = True
-        outfile.write('<indnames>\n' + '\n'.join(indnames) + '\n</indnames>\n')
+        outfile.write('<indnames>\n' + '\n'.join(individualnames) + '\n</indnames>\n')
     elif line.startswith('##'):
         # regular header lines, ignore!
         pass
