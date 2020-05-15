@@ -1,6 +1,6 @@
 # this script takes the output from convert_vcf_pseudoMS.py
 # goes through data block by block
-# output: table of missing blocks per individual
+# output: counts of missing blocks per individual
 import sys
 
 instream = sys.stdin
@@ -23,13 +23,13 @@ for line in instream:
             ordered_indnames.append(line.strip())
     if line.startswith('<block>'):
         blocktag = True
-        individual_idx = 0
         continue
     if blocktag:
         if line.startswith('BLOCK'):
             blockname = line.strip()
             blocklength = int(blockname.split('len')[1])
             missingid = id('N'*blocklength)
+            individual_idx = 0
         elif line.startswith('</block>'):
             blocktag = False
             continue
@@ -38,4 +38,4 @@ for line in instream:
                 indmissingcountdict[ordered_indnames[individual_idx]] += 1
                 individual_idx += 1
 
-print(indmissingcountdict)
+print([indmissingcountdict[x] for x in ordered_indnames])
