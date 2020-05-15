@@ -63,15 +63,17 @@ class SequenceBlock():
         # append each base to each individual
         [self.individualLOL[i].append(extractBase(v, REF, ALT)) for i, v in enumerate(GTs)]
 
-    def get_parsed(self, minlength, targetlength, tags=False):
+    def get_parsed(self, minlength, tags=False):
         # returns a neatly parsed string ready for writing:
         # blockname
         # ind1 sequence
         # indn sequence
+        self.outstring = [self.get_blockname()] + ['{} {}'.format(v, ''.join(self.individualLOL[i])) for i, v in enumerate(self.individualnames)]
         if self.get_blocklength() >= minlength:
-            self.outstring = [self.get_blockname()] + \
-                             ['{} {}'.format(v, ''.join(self.individualLOL[i][0:targetlength+1])) for i, v in enumerate(self.individualnames)]
-            return self.outstring
+            if tags:
+                return '\n'.join(['<block>'] + self.outstring + ['</block>']) + '\n'
+            else:
+                return '\n'.join(self.outstring) + '\n'
         else:
             return ''
 
@@ -113,7 +115,7 @@ for line in infile:
                 # on the same CHR and within gaptolerance
                 if currentblock.get_blocklength() >= blocklengthmax:
                     # block has already reached defined targetlength -> new block!
-                    outfile.write(currentblock.get_parsed(blocklengthmin, blocklengthmax))
+                    outfile.write(currentblock.get_parsed(blocklengthmin))
                     currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
                     currentblock.put_line(GTs, linesplit[1], REF, ALT)
                 else:
@@ -121,10 +123,10 @@ for line in infile:
                     currentblock.put_line(GTs, linesplit[1], REF, ALT)
             else:
                 # either different CHR or too large gap -> new sequence block
-                outfile.write(currentblock.get_parsed(blocklengthmin, blocklengthmax))
+                outfile.write(currentblock.get_parsed(blocklengthmin))
                 currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
                 currentblock.put_line(GTs, linesplit[1], REF, ALT)
-outfile.write(currentblock.get_parsed(blocklengthmin, blocklengthmax))
+outfile.write(currentblock.get_parsed(blocklengthmin))
 
 
 
