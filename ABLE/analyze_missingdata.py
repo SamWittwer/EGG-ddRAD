@@ -38,4 +38,4 @@ for line in instream:
                 indmissingcountdict[ordered_indnames[individual_idx]] += 1
                 individual_idx += 1
 
-print(['{} {}'.formet(x, indmissingcountdict[x]) for x in ordered_indnames])
+print(['{} {}'.format(x, indmissingcountdict[x]) for x in ordered_indnames])

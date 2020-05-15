@@ -63,12 +63,12 @@ class SequenceBlock():
         # append each base to each individual
         [self.individualLOL[i].append(extractBase(v, REF, ALT)) for i, v in enumerate(GTs)]
 
-    def get_parsed(self, minlength, tags = True):
+    def get_parsed(self, minlength, tags = False):
         # returns a neatly parsed string ready for writing:
         # blockname
         # ind1 sequence
         # indn sequence
-        self.outstring = [self.get_blockname()] + ['{}'.format(''.join(self.individualLOL[i])) for i, v in enumerate(self.individualnames)]
+        self.outstring = [self.get_blockname()] + ['{} {}'.format(v, ''.join(self.individualLOL[i])) for i, v in enumerate(self.individualnames)]
         if self.get_blocklength() >= minlength:
             if tags:
                 return '\n'.join(['<block>'] + self.outstring + ['</block>']) + '\n'
@@ -93,7 +93,7 @@ for line in infile:
         # last header line, extract names of individuals!
         individualnames = line.strip().split('\t')[9:]
         firstline = True
-        outfile.write('<indnames>\n' + '\n'.join(individualnames) + '\n</indnames>\n')
+        #outfile.write('<indnames>\n' + '\n'.join(individualnames) + '\n</indnames>\n')
     elif line.startswith('##'):
         # regular header lines, ignore!
         pass
