@@ -26,7 +26,7 @@ for line in instream:
     if linespl[1] == missingstr:
         missingcountdict[linespl[0]] += 1
 
-[outstream.write('{} {}'.format(x, missingcountdict[x])) for x in ordered_inds]
+[outstream.write('{} {}\n'.format(x, missingcountdict[x])) for x in ordered_inds]
 
 
 
