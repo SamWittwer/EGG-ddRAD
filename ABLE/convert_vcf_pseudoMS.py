@@ -68,7 +68,7 @@ class SequenceBlock():
         # blockname
         # ind1 sequence
         # indn sequence
-        self.outstring = [self.get_blockname()] + ['{} {}'.format(v, ''.join(self.individualLOL[i])) for i, v in enumerate(self.individualnames)]
+        self.outstring = [self.get_blockname()] + ['{}'.format(''.join(self.individualLOL[i])) for i, v in enumerate(self.individualnames)]
         if self.get_blocklength() >= minlength:
             if tags:
                 return '\n'.join(['<block>'] + self.outstring + ['</block>']) + '\n'
