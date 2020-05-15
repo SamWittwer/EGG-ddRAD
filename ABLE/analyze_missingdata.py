@@ -6,36 +6,28 @@ import sys
 instream = sys.stdin
 outstream = sys.stdout
 
-indtag = False
-blocktag = False
-for line in instream:
-    if line.startswith('<indnames>'):
-        indtag = True
-        indmissingcountdict = {}
-        ordered_indnames = []
-        continue
-    if indtag:
-        if line.startswith('</indnames>'):
-            indtag = False
-            continue
-        else:
-            indmissingcountdict[line.strip()] = 0
-            ordered_indnames.append(line.strip())
-    if line.startswith('<block>'):
-        blocktag = True
-        continue
-    if blocktag:
-        if line.startswith('BLOCK'):
-            blockname = line.strip()
-            blocklength = int(blockname.split('len')[1])
-            missingid = id('N'*blocklength)
-            individual_idx = 0
-        elif line.startswith('</block>'):
-            blocktag = False
-            continue
-        else:
-            if id(line.strip()) == missingid:
-                indmissingcountdict[ordered_indnames[individual_idx]] += 1
-                individual_idx += 1
+firstblock = True
+blockcount = 0
+missingcountdict = {}
+ordered_inds = []
 
-print(['{} {}'.format(x, indmissingcountdict[x]) for x in ordered_indnames])
+for line in instream:
+    if line.startswith('BLOCK'):
+        if blockcount >= 1:
+            firstblock = False
+        currentblocklength = int(line.strip().split('len')[1])
+        missingstr = 'N' * currentblocklength
+        blockcount += 1
+        continue
+    linespl = line.strip().split()
+    if firstblock:
+        ordered_inds.append(linespl[0])
+        missingcountdict[linespl[0]] = 0
+    if linespl[1] == missingstr:
+        missingcountdict[linespl[0]] += 1
+
+[outstream.write(missingcountdict[x]) for x in ordered_inds]
+
+
+
+
