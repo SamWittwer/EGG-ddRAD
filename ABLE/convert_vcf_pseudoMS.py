@@ -1,6 +1,8 @@
-# this script takes a g.vcf file and parses it in /almost/ pseudoMS format
-# usage: cat vcf | python convert_vcf_pseudoMS.py gaptolerance(int) blocklength > out.txt
+# this script takes a g.vcf file and parses it in a temporary format for further processing
+# usage: cat vcf | python convert_vcf_pseudoMS.py gaptolerance(int) blocklengthmin(int) blocklengthmax(int) > out.txt
 # gaptolerance: if gap within block, fill up with Ns!
+# blocklengthmin: minimal desired blocklength for block to be written out
+# blocklengthmax: maximum block length, splitting block if longer
 
 
 import sys
@@ -91,6 +93,7 @@ for line in infile:
         # last header line, extract names of individuals!
         individualnames = line.strip().split('\t')[9:]
         firstline = True
+        outfile.write('<indnames>\n' + '\n'.join(indnames) + '\n</indnames>\n')
     elif line.startswith('##'):
         # regular header lines, ignore!
         pass
