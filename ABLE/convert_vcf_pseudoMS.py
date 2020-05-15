@@ -63,6 +63,12 @@ class SequenceBlock():
         # append each base to each individual
         [self.individualLOL[i].append(extractBase(v, REF, ALT)) for i, v in enumerate(GTs)]
 
+    def clip(self, length):
+        self.lengthtoclip = len(self.POSlist) - length
+        if self.lengthtoclip > 0:
+            self.POSlist = self.POSlist[-self.lengthtoclip]
+            self.individualLOL = [x[-self.lengthtoclip] for x in self.individualLOL]
+
     def get_parsed(self, minlength, tags=False):
         # returns a neatly parsed string ready for writing:
         # blockname
@@ -115,6 +121,7 @@ for line in infile:
                 # on the same CHR and within gaptolerance
                 if currentblock.get_blocklength() >= blocklengthmax:
                     # block has already reached defined targetlength -> new block!
+                    currentblock.clip(blocklengthmax)
                     outfile.write(currentblock.get_parsed(blocklengthmin))
                     currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
                     currentblock.put_line(GTs, linesplit[1], REF, ALT)
@@ -123,9 +130,11 @@ for line in infile:
                     currentblock.put_line(GTs, linesplit[1], REF, ALT)
             else:
                 # either different CHR or too large gap -> new sequence block
+                currentblock.clip(blocklengthmax)
                 outfile.write(currentblock.get_parsed(blocklengthmin))
                 currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
                 currentblock.put_line(GTs, linesplit[1], REF, ALT)
+currentblock.clip(blocklengthmax)
 outfile.write(currentblock.get_parsed(blocklengthmin))
 
 
