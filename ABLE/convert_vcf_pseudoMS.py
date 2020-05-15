@@ -57,13 +57,16 @@ class SequenceBlock():
         # append each base to each individual
         [self.individualLOL[i].append(extractBase(v, REF, ALT)) for i, v in enumerate(GTs)]
 
-    def get_parsed(self):
+    def get_parsed(self, tags = True):
         # returns a neatly parsed string ready for writing:
         # blockname
         # ind1 sequence
         # indn sequence
         self.outstring = [self.get_blockname()] + ['{} {}'.format(v, ''.join(self.individualLOL[i])) for i, v in enumerate(self.individualnames)]
-        return '\n'.join(self.outstring) + '\n'
+        if tags:
+            return '\n'.join(['<block>'] + self.outstring + ['</block>']) + '\n'
+        else:
+            return '\n'.join(self.outstring) + '\n'
 
     def get_GT(self):
         # just for testing
