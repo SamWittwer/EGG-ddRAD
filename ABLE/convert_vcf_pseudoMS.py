@@ -8,7 +8,8 @@ import sys
 infile = sys.stdin
 outfile = sys.stdout
 gaptolerance = int(sys.argv[1])
-blocklengthtarget = int(sys.argv[2])
+blocklengthmin = int(sys.argv[2])
+blocklengthmax = int(sys.argv[3])
 
 class SequenceBlock():
     # class to hold continuous sequence block extracted from vcf and provide methods to parse for pseudo_MS on the fly
@@ -60,16 +61,19 @@ class SequenceBlock():
         # append each base to each individual
         [self.individualLOL[i].append(extractBase(v, REF, ALT)) for i, v in enumerate(GTs)]
 
-    def get_parsed(self, tags = True):
+    def get_parsed(self, minlength, tags = True):
         # returns a neatly parsed string ready for writing:
         # blockname
         # ind1 sequence
         # indn sequence
         self.outstring = [self.get_blockname()] + ['{} {}'.format(v, ''.join(self.individualLOL[i])) for i, v in enumerate(self.individualnames)]
-        if tags:
-            return '\n'.join(['<block>'] + self.outstring + ['</block>']) + '\n'
+        if self.get_blocklength() >= minlength:
+            if tags:
+                return '\n'.join(['<block>'] + self.outstring + ['</block>']) + '\n'
+            else:
+                return '\n'.join(self.outstring) + '\n'
         else:
-            return '\n'.join(self.outstring) + '\n'
+            return ''
 
     def fill_N(self, desiredlength):
         while desiredlength - self.get_lastpos() > 1:
@@ -106,9 +110,9 @@ for line in infile:
         else:
             if linesplit[0] == currentblock.get_CHR() and int(linesplit[1]) - currentblock.get_lastpos() <= gaptolerance:
                 # on the same CHR and within gaptolerance
-                if currentblock.get_blocklength() >= blocklengthtarget:
+                if currentblock.get_blocklength() >= blocklengthmax:
                     # block has already reached defined targetlength -> new block!
-                    outfile.write(currentblock.get_parsed())
+                    outfile.write(currentblock.get_parsed(blocklengthmin))
                     currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
                     currentblock.put_line(GTs, linesplit[1], REF, ALT)
                 else:
@@ -116,10 +120,10 @@ for line in infile:
                     currentblock.put_line(GTs, linesplit[1], REF, ALT)
             else:
                 # either different CHR or too large gap -> new sequence block
-                outfile.write(currentblock.get_parsed())
+                outfile.write(currentblock.get_parsed(blocklengthmin))
                 currentblock = SequenceBlock(linesplit[0], linesplit[1], individualnames)
                 currentblock.put_line(GTs, linesplit[1], REF, ALT)
-outfile.write(currentblock.get_parsed())
+outfile.write(currentblock.get_parsed(blocklengthmin))
 
 
 
