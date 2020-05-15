@@ -41,9 +41,8 @@ class SequenceBlock():
 
         # fill up sequence with N if there are gaps within the block but within gaptolerance
         if len(self.POSlist) > 0:
-            while self.p - self.get_lastpos() > 1:
-                self.POSlist.append(self.get_lastpos() + 1)
-                [self.individualLOL[i].append('N') for i, v in enumerate(GTs)]
+            if self.p - self.get_lastpos() > 1:
+                self.fill_N(self.p)
 
         # append newest pos
         self.POSlist.append(self.p)
@@ -67,6 +66,11 @@ class SequenceBlock():
             return '\n'.join(['<block>'] + self.outstring + ['</block>']) + '\n'
         else:
             return '\n'.join(self.outstring) + '\n'
+
+    def fill_N(self, desiredlength):
+        while desiredlength - self.get_lastpos() > 1:
+            self.POSlist.append(self.get_lastpos() + 1)
+            [self.individualLOL[i].append('N') for i, v in enumerate(GTs)]
 
     def get_GT(self):
         # just for testing
