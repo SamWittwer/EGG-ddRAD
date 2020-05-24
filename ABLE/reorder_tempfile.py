@@ -16,6 +16,7 @@ for line in prelimpseudoms:
     if blockcounter % 1000 == 0:
         sys.stderr.write('{} blocks read\n'.format(blockcounter))
     if line.startswith('//'):
+        blockcounter += 1
         continue
     elif line.startswith('BLOCK'):
         # new block, add to dict
@@ -28,4 +29,4 @@ for line in prelimpseudoms:
             blockdict[currentblock][linespl[0]].append(linespl[1])
         else:
             blockdict[currentblock][linespl[0]] = [linespl[1]]
-    blockcounter += 1
+
