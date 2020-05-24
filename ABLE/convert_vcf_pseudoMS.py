@@ -61,7 +61,7 @@ class SequenceBlock():
 
             translatedict = {'.': 'N', '0': REF, '1': ALT}
             indspl = [translatedict[x] for x in individual.replace('|', '/').split('/')]
-            return [self.ambiguitydict[indspl[0]][indspl[0]], self.ambiguitydict[indspl[0]][indspl[0]]]
+            return [self.ambiguitydict[indspl[0]][indspl[0]], self.ambiguitydict[indspl[1]][indspl[1]]]
 
         # append each base to each individual
         [self.individualLOL[i].append(extractBase(v, REF, ALT)) for i, v in enumerate(GTs)]
