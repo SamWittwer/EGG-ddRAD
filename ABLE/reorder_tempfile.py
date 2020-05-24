@@ -3,7 +3,7 @@ import sys
 
 #orderfile = sys.argv[1]
 prelimpseudoms = sys.stdin
-orderfile = 'individualorder_sortedbysite.txt'
+orderfile = sys.argv[1]
 output = sys.stdout
 
 with open(orderfile, 'r') as desiredorder:
