@@ -30,3 +30,4 @@ for line in prelimpseudoms:
         else:
             blockdict[currentblock][linespl[0]] = [linespl[1]]
 
+print(blockcounter)
