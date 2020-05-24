@@ -13,9 +13,9 @@ blockdict = {}
 blockorder = []
 blockcounter = 0
 for line in prelimpseudoms:
-    if blockcounter % 1000 == 0:
-        sys.stderr.write('{} blocks read\n'.format(blockcounter))
     if line.startswith('//'):
+        if blockcounter % 1000 == 0:
+            sys.stderr.write('{} blocks read\n'.format(blockcounter))
         blockcounter += 1
         continue
     elif line.startswith('BLOCK'):
