@@ -15,15 +15,15 @@ for counter, line in enumerate(sys.stdin):
             if counter > 1:
                 if all_same(blockhashes):
                     sameblocks = sameblocks + 1
-                    outfile.write('\n')
+                    sys.stdout.write('\n')
                 else:
                     diffblocks = diffblocks + 1
-                    outfile.write(transpose(blocksequences) + '\n')
-            outfile.write(line)
+                    sys.stdout.write(transpose(blocksequences) + '\n')
+            sys.stdout.write(line)
             blocksequences = []
             blockhashes = []
         elif line.startswith('BLOCK'):
-            outfile.write(line)
+            sys.stdout.write(line)
         elif line.strip():
             blocksequences.append(list(line.strip().split()[1]))
             blockhashes.append(hash(line.strip().split()[1]))
@@ -31,7 +31,7 @@ if all_same(blockhashes):
     sameblocks = sameblocks + 1
 else:
     diffblocks = diffblocks + 1
-    outfile.write(transpose(blocksequences))
+    sys.stdout.write(transpose(blocksequences))
 
 print '{} blocks are monomorphic, {} blocks have 1 or more SNPs'.format(sameblocks, diffblocks)
 
