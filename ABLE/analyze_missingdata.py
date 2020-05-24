@@ -6,8 +6,6 @@ import sys
 instream = sys.stdin
 outstream = sys.stdout
 
-missing_type = int(sys.argv[1])
-
 firstblock = True
 blockcount = 0
 missingcountdict = {} # holds counts of missing blocks per individual
