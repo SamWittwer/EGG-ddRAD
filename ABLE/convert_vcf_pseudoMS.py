@@ -79,8 +79,9 @@ class SequenceBlock():
         # indn sequence
         self.outlist = []
         for idx, indname in enumerate(self.individualnames):
-            self.outlist.append('{} {}'.format(indname, ''.join([x[0] for x in self.individualLOL[idx]])))
-        return '\n'.join(self.outlist)
+            self.outlist.append('{} {}\n'.format(indname, ''.join([x[0] for x in self.individualLOL[idx]])))
+            self.outlist.append('{} {}\n'.format(indname, ''.join([x[1] for x in self.individualLOL[idx]])))
+        return ''.join(self.outlist)
 
     def fill_N(self, desiredlength):
         while desiredlength - self.get_lastpos() > 1:
