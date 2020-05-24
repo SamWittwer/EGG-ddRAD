@@ -27,5 +27,5 @@ for line in prelimpseudoms:
         if linespl[0] in blockdict[currentblock].keys():
             blockdict[currentblock][linespl[0]].append(linespl[1])
         else:
-            blockdict[currentblock][linespl[0]] = linespl[1]
+            blockdict[currentblock][linespl[0]] = [linespl[1]]
     blockcounter += 1
