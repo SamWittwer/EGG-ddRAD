@@ -74,7 +74,7 @@ class SequenceBlock():
         # blockname
         # ind1 sequence
         # indn sequence
-        self.outstring = [self.get_blockname()] + ['{} {}'.format(v, ''.join(self.individualLOL[i])) for i, v in enumerate(self.individualnames)]
+        self.outstring = [self.get_blockname()] + ['{}'.format(''.join(self.individualLOL[i])) for i, v in enumerate(self.individualnames)]
         if self.get_blocklength() >= minlength:
             if tags:
                 return '\n'.join(['<block>'] + self.outstring + ['</block>']) + '\n'
@@ -134,6 +134,8 @@ for line in infile:
                 currentblock.put_line(GTs, linesplit[1], REF, ALT)
 outfile.write(currentblock.get_parsed(blocklengthmin))
 
+with open('individualorder.txt', 'w') as indorderfile:
+    indorderfile.write('\n'.join(individualnames))
 
 
 
