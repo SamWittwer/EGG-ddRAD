@@ -83,7 +83,7 @@ class SequenceBlock():
         # blockname
         # ind1 sequence
         # indn sequence
-        self.outlist = []
+        self.outlist = ['//\n{}'.format(self.get_blockname())]
         for idx, indname in enumerate(self.individualnames):
             try:
                 self.outlist.append('{} {}\n'.format(indname, ''.join([x[0] for x in self.individualLOL[idx]])))
