@@ -33,6 +33,6 @@ print(blockcounter)
 for B in blockorder:
     output.write('//\n{}\n'.format(B))
     for I in indlist:
-        output.write('{} {}\n'.format(I, blockdict[B, blockorder[B][I][0]]))
-        output.write('{} {}\n'.format(I, blockdict[B, blockorder[B][I][1]]))
+        output.write('{} {}\n'.format(I, blockdict[B, blockdict[B][I][0]]))
+        output.write('{} {}\n'.format(I, blockdict[B, blockdict[B][I][1]]))
 
