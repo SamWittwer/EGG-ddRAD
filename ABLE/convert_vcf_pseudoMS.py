@@ -72,19 +72,15 @@ class SequenceBlock():
             self.POSlist = self.POSlist[-self.lengthtoclip]
             self.individualLOL = [x[-self.lengthtoclip] for x in self.individualLOL]
 
-    def get_parsed(self, minlength, tags=False):
+    def get_parsed(self, minlength):
         # returns a neatly parsed string ready for writing:
         # blockname
         # ind1 sequence
         # indn sequence
-        self.outstring = ['//\n' + self.get_blockname()] + ['{} {}\n{} {}\n'.format(v, ''.join(self.individualLOL[i][0]), v, ''.join(self.individualLOL[i][0])) for i, v in enumerate(self.individualnames)]
-        if self.get_blocklength() >= minlength:
-            if tags:
-                return '\n'.join(['<block>'] + self.outstring + ['</block>']) + '\n'
-            else:
-                return '\n'.join(self.outstring) + '\n'
-        else:
-            return ''
+        self.outlist = []
+        for idx, indname in enumerate(self.individualnames):
+            self.outlist.append('{} {}'.(indname, ''.join([x[0] for x in self.individualLOL[idx]])))
+        return '\n'.join(self.outlist)
 
     def fill_N(self, desiredlength):
         while desiredlength - self.get_lastpos() > 1:
