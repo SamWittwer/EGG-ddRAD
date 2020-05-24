@@ -29,5 +29,10 @@ for line in prelimpseudoms:
             blockdict[currentblock][linespl[0]].append(linespl[1])
         else:
             blockdict[currentblock][linespl[0]] = [linespl[1]]
-
 print(blockcounter)
+for B in blockorder:
+    output.write('//\n{}\n'.format(b))
+    for I in indlist:
+        output.write('{} {}\n'.format(I, blockdict[B, blockorder[B][I][0]]))
+        output.write('{} {}\n'.format(I, blockdict[B, blockorder[B][I][1]]))
+
