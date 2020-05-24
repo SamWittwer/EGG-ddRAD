@@ -29,7 +29,7 @@ for line in prelimpseudoms:
             blockdict[currentblock][linespl[0]].append(linespl[1])
         else:
             blockdict[currentblock][linespl[0]] = [linespl[1]]
-print(blockcounter)
+sys.stderr(blockcounter)
 for B in blockorder:
     output.write('//\n{}\n'.format(B))
     for I in indlist:
