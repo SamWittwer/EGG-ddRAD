@@ -8,7 +8,7 @@
 
 import sys
 
-infile = open('testdata.txt', 'r')
+infile = sys.stdin
 outfile = sys.stdout
 try:
     gaptolerance = int(sys.argv[1])
