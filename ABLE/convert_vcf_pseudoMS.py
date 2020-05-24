@@ -3,6 +3,7 @@
 # gaptolerance: if gap within block, fill up with Ns!
 # blocklengthmin: minimal desired blocklength for block to be written out
 # blocklengthmax: maximum block length, splitting block if longer
+# next step: reorder sequences
 
 
 import sys
@@ -56,9 +57,11 @@ class SequenceBlock():
 
         def extractBase(individual, REF, ALT):
             #helper function to translate numerical vcf calls to IUPAC ambiguity code
+            # BUT ABLE expects diploid... leaving ambiguitydict in though and returning tuple instead
+
             translatedict = {'.': 'N', '0': REF, '1': ALT}
             indspl = [translatedict[x] for x in individual.replace('|', '/').split('/')]
-            return self.ambiguitydict[indspl[0]][indspl[1]]
+            return [self.ambiguitydict[indspl[0]][indspl[0]], self.ambiguitydict[indspl[0]][indspl[0]]]
 
         # append each base to each individual
         [self.individualLOL[i].append(extractBase(v, REF, ALT)) for i, v in enumerate(GTs)]
@@ -74,7 +77,7 @@ class SequenceBlock():
         # blockname
         # ind1 sequence
         # indn sequence
-        self.outstring = ['//\n' + self.get_blockname()] + ['{}'.format(''.join(self.individualLOL[i])) for i, v in enumerate(self.individualnames)]
+        self.outstring = ['//\n' + self.get_blockname()] + ['{} {}\n{} {}\n'.format(v, ''.join(self.individualLOL[i][0]), v, ''.join(self.individualLOL[i][0])) for i, v in enumerate(self.individualnames)]
         if self.get_blocklength() >= minlength:
             if tags:
                 return '\n'.join(['<block>'] + self.outstring + ['</block>']) + '\n'

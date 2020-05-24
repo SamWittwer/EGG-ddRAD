@@ -11,7 +11,7 @@ with open(infile, 'r') as file_in, open(outfile, 'w') as file_out:
         if line.startswith('BLOCK'):
             currentblock = line.strip()
             blockdict[currentblock] = []
-        elif line and not line.startswith('\\\\'):
+        elif line and not line.startswith('//'):
             blockdict[currentblock].append([x for x in line.strip()])
 
 for block in blockdict:
