@@ -11,23 +11,21 @@ with open(orderfile, 'r') as desiredorder:
 
 blockdict = {}
 blockorder = []
+blockcounter = 0
 for line in prelimpseudoms:
+    if blockcounter % 1000:
+        sys.stderr.write('{} blocks read'.format(blockcounter))
     if line.startswith('//'):
         continue
     elif line.startswith('BLOCK'):
+        # new block, add to dict
+        currentblock = line.strip()
         blockorder.append(line.strip())
-        blockdict[blockorder[-1]] = {}
+        blockdict[currentblock] = {}
     else:
         linespl = line.strip().split()
-        if linespl[0] in blockdict.keys():
-            blockdict[linespl[0]].append(linespl[1])
+        if linespl[0] in blockdict[currentblock].keys():
+            blockdict[currentblock][linespl[0]].append(linespl[1])
         else:
-            blockdict[linespl[0]] = [linespl[1]]
-
-for BLOCK in blockorder:
-    output.write('//\n{}\n'.format(BLOCK))
-    for individual in indlist:
-        output.write('{} {}\n{} {}\n'.format(individual,
-                                           blockdict[BLOCK][individual][0],
-                                           individual,
-                                           blockdict[BLOCK][individual][1]))
+            blockdict[currentblock] = [linespl[1]]
+    blockcounter += 1
