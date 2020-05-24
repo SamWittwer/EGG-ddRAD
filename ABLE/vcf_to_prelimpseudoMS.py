@@ -83,14 +83,15 @@ class SequenceBlock():
         # blockname
         # ind1 sequence
         # indn sequence
-        self.outlist = ['//\n{}'.format(self.get_blockname())]
-        for idx, indname in enumerate(self.individualnames):
-            try:
-                self.outlist.append('{} {}\n'.format(indname, ''.join([x[0] for x in self.individualLOL[idx]])))
-                self.outlist.append('{} {}\n'.format(indname, ''.join([x[1] for x in self.individualLOL[idx]])))
-            except IndexError:
-                print(self.individualLOL[idx])
-        return ''.join(self.outlist)
+        if self.get_blocklength() >= minlength:
+            self.outlist = ['//\n{}\n'.format(self.get_blockname())]
+            for idx, indname in enumerate(self.individualnames):
+                try:
+                    self.outlist.append('{} {}\n'.format(indname, ''.join([x[0] for x in self.individualLOL[idx]])))
+                    self.outlist.append('{} {}\n'.format(indname, ''.join([x[1] for x in self.individualLOL[idx]])))
+                except IndexError:
+                    print(self.individualLOL[idx])
+            return ''.join(self.outlist)
 
     def fill_N(self, desiredlength):
         while desiredlength - self.get_lastpos() > 1:
