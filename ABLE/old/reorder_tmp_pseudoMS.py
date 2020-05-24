@@ -1,4 +1,4 @@
-## this script takes the tmp file generated through convert_vcf_pseudoMS.py and
+## this script takes the tmp file generated through vcf_to_prelimpseudoMS.py and
 ## - discards blocks shorter than the desired length
 ## - clips ends of reads longer than the desired length
 ## - reorders sequences within blocks according to a poporder file (one pop per line, 3-letter pop must be at beginning
@@ -9,7 +9,7 @@
 minblocklength = 130 # the desired block length
 minblocklength_tolerance = 10 # length tolerance for blocks shorter than the desired minblocklength
 popmappingfile = 'largemapping.txt' # file with one ind per line -> gives desired order for output pseudo_MS
-tmp_pseudoMS = 'largetestdata.vcf_gaptol10.tmp' # output from convert_vcf_pseudoMS.py
+tmp_pseudoMS = 'largetestdata.vcf_gaptol10.tmp' # output from vcf_to_prelimpseudoMS.py
 reorderedfilename = 'reordered.tmp' # output file name
 
 # read in desired individual order

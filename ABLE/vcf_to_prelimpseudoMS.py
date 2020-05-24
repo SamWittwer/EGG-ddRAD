@@ -1,5 +1,5 @@
 # this script takes a g.vcf file and parses it in a temporary format for further processing
-# usage: cat vcf | python convert_vcf_pseudoMS.py gaptolerance(int) blocklengthmin(int) blocklengthmax(int) > out.txt
+# usage: cat vcf | python vcf_to_prelimpseudoMS.py gaptolerance(int) blocklengthmin(int) blocklengthmax(int) > out.txt
 # gaptolerance: if gap within block, fill up with Ns!
 # blocklengthmin: minimal desired blocklength for block to be written out
 # blocklengthmax: maximum block length, splitting block if longer
@@ -8,11 +8,17 @@
 
 import sys
 
-infile = sys.stdin
+infile = open('testdata.txt', 'r')
 outfile = sys.stdout
-gaptolerance = int(sys.argv[1])
-blocklengthmin = int(sys.argv[2])
-blocklengthmax = int(sys.argv[3])
+try:
+    gaptolerance = int(sys.argv[1])
+    blocklengthmin = int(sys.argv[2])
+    blocklengthmax = int(sys.argv[3])
+except IndexError:
+    gaptolerance = 5
+    blocklengthmin = 130
+    blocklengthmax = 130
+
 
 class SequenceBlock():
     # class to hold continuous sequence block extracted from vcf and provide methods to parse for pseudo_MS on the fly
@@ -79,14 +85,17 @@ class SequenceBlock():
         # indn sequence
         self.outlist = []
         for idx, indname in enumerate(self.individualnames):
-            self.outlist.append('{} {}\n'.format(indname, ''.join([x[0] for x in self.individualLOL[idx]])))
-            self.outlist.append('{} {}\n'.format(indname, ''.join([x[1] for x in self.individualLOL[idx]])))
+            try:
+                self.outlist.append('{} {}\n'.format(indname, ''.join([x[0] for x in self.individualLOL[idx]])))
+                self.outlist.append('{} {}\n'.format(indname, ''.join([x[1] for x in self.individualLOL[idx]])))
+            except IndexError:
+                print(self.individualLOL[idx])
         return ''.join(self.outlist)
 
     def fill_N(self, desiredlength):
         while desiredlength - self.get_lastpos() > 1:
             self.POSlist.append(self.get_lastpos() + 1)
-            [self.individualLOL[i].append('N') for i, v in enumerate(GTs)]
+            [self.individualLOL[i].append(['N', 'N']) for i, v in enumerate(GTs)]
 
     def get_GT(self):
         # just for testing

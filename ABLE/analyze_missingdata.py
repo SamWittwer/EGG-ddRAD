@@ -1,4 +1,4 @@
-# this script takes the output from convert_vcf_pseudoMS.py
+# this script takes the output from vcf_to_prelimpseudoMS.py
 # goes through data block by block
 # output: counts of missing blocks per individual
 import sys
