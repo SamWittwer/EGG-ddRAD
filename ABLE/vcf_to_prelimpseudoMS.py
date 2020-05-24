@@ -92,6 +92,8 @@ class SequenceBlock():
                 except IndexError:
                     print(self.individualLOL[idx])
             return ''.join(self.outlist)
+        else:
+            return ''
 
     def fill_N(self, desiredlength):
         while desiredlength - self.get_lastpos() > 1:
