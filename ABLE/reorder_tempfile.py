@@ -14,7 +14,7 @@ blockorder = []
 for line in prelimpseudoms:
     if line.startswith('//'):
         continue
-    elif line.starswith('BLOCK'):
+    elif line.startswith('BLOCK'):
         blockorder.append(line.strip())
         blockdict[blockorder[-1]] = {}
     else:
