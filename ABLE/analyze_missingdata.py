@@ -15,6 +15,8 @@ ordered_blocks = [] # holds order of blocks
 missinginblock = False # flag if at least one individual in block has missing data
 
 for line in instream:
+    if line.startswith('//'):
+        continue
     if line.startswith('BLOCK'):
         # new block, check length and number of Ns to compare
         if blockcount >= 1:
