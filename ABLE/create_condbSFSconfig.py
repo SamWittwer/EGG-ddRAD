@@ -29,7 +29,7 @@ with open(sys.argv[1] + '.ABLEconf', 'r') as c, open(sys.argv[1] + '.ABLEinfer',
         elif line.startswith('ABLE'):
             # ABLEline -> keep line as list and later replace tbi with numeric values
             ABLEline = line.strip().split()
-            ABLEline[2] = '100000'
+            ABLEline[2] = '1000000'
 
     # go through ABLEinfer file and find line with final parameter values
     for line in i:
