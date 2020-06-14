@@ -43,4 +43,4 @@ with open(sys.argv[1] + '.ABLEconf', 'r') as c, open(sys.argv[1] + '.ABLEinfer',
 
     with open(sys.argv[1] + '.condbSFS', 'w') as o:
         # write out new config file <basename>.condbSFS
-        o.write('{}task conditional_bSFS\n{}{}folded\n'.format(popsline, datafileline, condbSFSline))
+        o.write('{}task conditional_bSFS\n{}{}\n'.format(popsline, datafileline, condbSFSline))
