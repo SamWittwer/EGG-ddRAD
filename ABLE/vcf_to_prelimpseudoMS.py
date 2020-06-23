@@ -108,14 +108,13 @@ class SequenceBlock():
 
 
 for line in infile:
-    if line.startswith('#CHROM'):
-        # last header line, extract names of individuals!
+    if line.startswith('##'):
+        # metadata from header, skip over
+        continue
+    elif line.startswith('#CHROM'):
+        # last header line, extract names of individuals. Individual names start at pos 9
         individualnames = line.strip().split('\t')[9:]
         firstline = True
-        #outfile.write('<indnames>\n' + '\n'.join(individualnames) + '\n</indnames>\n')
-    elif line.startswith('##'):
-        # regular header lines, ignore!
-        pass
     else:
         # actual data lines, process!
         # individuals start at 9:
@@ -130,7 +129,7 @@ for line in infile:
             currentblock.put_line(GTs, linesplit[1], REF, ALT)
             firstline = False
         else:
-            if linesplit[0] == currentblock.get_CHR() and int(linesplit[1]) - currentblock.get_lastpos() <= gaptolerance:
+            if linesplit[0] == currentblock.get_CHR() and int(linesplit[1]) - currentblock.get_lastpos() <= gaptolerance + 1:
                 # on the same CHR and within gaptolerance
                 if currentblock.get_blocklength() >= blocklengthmax:
                     # block has already reached defined targetlength -> new block!

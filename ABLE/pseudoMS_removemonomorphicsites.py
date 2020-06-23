@@ -1,37 +1,42 @@
-#!/usr/bin/python
 import sys
 
-def all_same(items):
-    return all(x == items[0] for x in items)
 
-def transpose(blockseq):
-    return '\n'.join([''.join(b) for b in zip(*(r for r in zip(*blockseq) if len(set(r)) > 1))]) + '\n'
+class pseudo_MS():
+    def __init__(self, blockname):
+        self.name = blockname
+        self.seqsLOL = []
 
-sameblocks = 0
-diffblocks = 0
-for counter, line in enumerate(sys.stdin):
-    if line.strip():
-        if line.startswith('//'):
-            if counter > 1:
-                if all_same(blockhashes):
-                    sameblocks = sameblocks + 1
-                    sys.stdout.write('\n')
-                else:
-                    diffblocks = diffblocks + 1
-                    sys.stdout.write(transpose(blocksequences) + '\n')
-            sys.stdout.write(line)
-            blocksequences = []
-            blockhashes = []
-        elif line.startswith('BLOCK'):
-            sys.stdout.write(line)
-        elif line.strip():
-            blocksequences.append(list(line.strip().split()[1]))
-            blockhashes.append(hash(line.strip().split()[1]))
-if all_same(blockhashes):
-    sameblocks = sameblocks + 1
-else:
-    diffblocks = diffblocks + 1
-    sys.stdout.write(transpose(blocksequences))
+    def addind(self, seq):
+        self.seqsLOL.append(list(seq))
 
-print '{} blocks are monomorphic, {} blocks have 1 or more SNPs'.format(sameblocks, diffblocks)
+    def printlist(self):
+        print(self.name)
+        for x in self.seqsLOL:
+            print(x)
 
+    def transpose_and_write(self, dest):
+        # transpose the sequences then for each base check if there's more than one letter (except N)
+        # keep if more than one, don't keep otherwise
+        self.transposed_list = [''.join(b) for b in zip(*(r for r in zip(*self.seqsLOL) if len([x for x in set(r) if x != 'N']) > 1))]
+        if self.transposed_list:
+            self.nsnp = len(self.transposed_list[0])
+        else:
+            self.nsnp = 0
+        self.transposed_str = '\n'.join(self.transposed_list)
+        #write out block
+        dest.write('//\n{}_SNP_{}\n{}\n'.format(self.name, self.nsnp, self.transposed_str))
+
+blocks = []
+for line in sys.stdin:
+    if line.startswith('//'):
+        pass
+    elif line.startswith('BLOCK'):
+        indcount = 0
+        currentblock = line.strip()
+        blocks.append(pseudo_MS(currentblock))
+    else:
+        indcount += 1
+        blocks[-1].addind(line.strip().split()[1])
+
+for b in blocks:
+    b.transpose_and_write(sys.stdout)
