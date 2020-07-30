@@ -1,3 +1,6 @@
+# usage
+# fastq_attachindex <indexfile> <readfile>
+
 import sys
 import samslib
 import gzip
@@ -5,7 +8,7 @@ import gzip
 
 
 indexfile = sys.argv[1]
-readstream = sys.stdin
+readstream = sys.argv[2]
 outstream = sys.stdout
 
 
@@ -137,18 +140,22 @@ with gzip.open(indexfile, 'r') as idx:
         elif counter < 3:
             counter += 1
 ## reading in reads one by one and writing out
-
+passedreads = 0
 counter = 0
 readlist_read = []
-for line in readstream:
-    if counter == 3:
-        readlist_read.append(line)
-        readobj = fastq_read(readlist_read)
-        if readobj.getreadname() in idxdict:
-            readobj.putindex(idxdict[readobj.getreadname()])
-            outstream.write(readobj.fastq_writestring())
-        readlist_read = []
-        counter = 0
-    elif counter < 3:
-        readlist_read.append(line)
-        counter += 1
+with gzip.open(readstream, 'r') as r:
+    for line in r:
+        if counter == 3:
+            readlist_read.append(line)
+            readobj = fastq_read(readlist_read)
+            if readobj.getreadname() in idxdict:
+                readobj.putindex(idxdict[readobj.getreadname()])
+                outstream.write(readobj.fastq_writestring())
+                passedreads += 1
+            readlist_read = []
+            counter = 0
+        elif counter < 3:
+            readlist_read.append(line)
+            counter += 1
+
+print(passedreads)
