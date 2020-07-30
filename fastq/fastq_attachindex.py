@@ -125,11 +125,12 @@ def log_write(message, destination='analysis_log.txt'):
     out.close()
 
 ## reading in all the index sequences
-with open(indexfile, 'r') as idx:
+with gzip.open(indexfile, 'r') as idx:
     counter = 0
     readname = None
     idxdict = {}
-    for line in idx:
+    for l in idx:
+        line = l.decode('utf-8')
         if counter == 0:
             readname = line.strip().split(' ')[0]
         if counter == 1:
@@ -143,8 +144,10 @@ with open(indexfile, 'r') as idx:
 passedreads = 0
 counter = 0
 readlist_read = []
-with open(readstream, 'r') as r:
-    for line in r:
+with gzip.open(readstream, 'rb') as r:
+    for l in r:
+        line = l.decode('utf-8')
+        print(line)
         if counter == 3:
             readlist_read.append(line)
             readobj = fastq_read(readlist_read)
