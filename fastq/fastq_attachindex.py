@@ -147,7 +147,6 @@ readlist_read = []
 with gzip.open(readstream, 'rb') as r:
     for l in r:
         line = l.decode('utf-8')
-        print(line)
         if counter == 3:
             readlist_read.append(line)
             readobj = fastq_read(readlist_read)
