@@ -125,7 +125,7 @@ def log_write(message, destination='analysis_log.txt'):
     out.close()
 
 ## reading in all the index sequences
-with gzip.open(indexfile, 'r') as idx:
+with gzip.open(indexfile, 'rb') as idx:
     counter = 0
     readname = None
     idxdict = {}
@@ -143,7 +143,7 @@ with gzip.open(indexfile, 'r') as idx:
 passedreads = 0
 counter = 0
 readlist_read = []
-with gzip.open(readstream, 'r') as r:
+with gzip.open(readstream, 'rb') as r:
     for line in r:
         if counter == 3:
             readlist_read.append(line)
