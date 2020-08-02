@@ -10,13 +10,13 @@ for interval in interval_list:
     with open('sh/' + interval + '.sh', 'w') as o:
         o.write('#!/bin/bash\n~/00_software/gatk-4.1.1.0/gatk --java-options "-Xmx4g" GenotypeGVCFs \
 -R /home/sam/chapter_01_demography/refgenome/ncbi-genomes-2019-10-21/GCA_003314715.1_Tur_tru_Illumina_hap_v1_genomic.fna \
--V gendb://11_GenomicsDB \
+-V gendb://10_GenomicsDB \
 -L {} \
 --tmp-dir ./tmp \
--G StandardHCAnnotation -G AS_StandardAnnotation \
+-G StandardAnnotation -G AS_StandardAnnotation -G StandardHCAnnotation \
 -verbosity INFO \
 --include-non-variant-sites \
--O ./12_joint_varcall/{}.vcf.gz'.format(interval, interval))
+-O ./11_joint_varcall/{}.vcf.gz'.format(interval, interval))
 
 
 
