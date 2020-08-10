@@ -17,7 +17,7 @@ for line in infile:
     
     if linecounter == 4:
         item = samslib.fastq_read(readlist)
-        if len(item.readdict['readname_indexsequence']) == 10:
+        if len(item.readdict['readname_indexsequence']) == 10 and 'N' not in item.readdict['readname_indexsequence']:
             subsets[item.degenerate()].append(item)
         readlist = []
         linecounter = 0
