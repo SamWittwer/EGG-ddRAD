@@ -16,7 +16,7 @@ for interval in interval_list:
 -G StandardAnnotation -G AS_StandardAnnotation -G StandardHCAnnotation \
 -verbosity INFO \
 --include-non-variant-sites \
--O ./03_joint_varcall/{}.vcf.gz \n \
+-O ./03_joint_varcall/{}.vcf.gz \n\
 vcftools --gzvcf ./11_joint_varcall/{}.vcf.gz --max-missing-count 162 --recode --stdout | gzip > ./04_min1ind/min1.{}.vcf.gz &'.format(interval, interval, interval, interval))
 
 
