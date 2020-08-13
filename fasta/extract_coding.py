@@ -87,8 +87,9 @@ filelist = ['rRNA1.nex',
             'ND4.nex',
             'ND4L.nex',
             'ND5.nex',
-            'ND6.nex']
-print filelist
+            'ND6.nex',
+            'Dloop.nex']
+print(filelist)
 nexi = [(fname, Nexus.Nexus(fname)) for fname in filelist]
 combined = Nexus.combine(nexi)
 combined.write_nexus_data(filename=open('COMBINED_noDloop.nex', 'w'))
