@@ -18,7 +18,7 @@ for interval in interval_list:
 -verbosity INFO \
 --include-non-variant-sites \
 -O ./04_joint_varcall/{}.vcf.gz \n\
-vcftools --gzvcf ./04_joint_varcall/{}.vcf.gz --max-missing-count 183 --recode --stdout | gzip > ./05_min1ind_DP5/min1.{}.vcf.gz &'.format(interval, interval, interval, interval))
+vcftools --gzvcf ./04_joint_varcall/{}.vcf.gz --max-missing-count 183 --minDP 5 --recode --stdout | gzip > ./05_min1ind_DP5/min1ind.minDP5.{}.vcf.gz &'.format(interval, interval, interval, interval))
 
 
 
