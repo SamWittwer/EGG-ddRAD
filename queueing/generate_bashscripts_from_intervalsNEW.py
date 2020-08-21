@@ -1,6 +1,7 @@
 import os
+import sys
 
-intervalfile = 'GCA_003314715.1.bed'
+intervalfile = sys.argv[1]
 with open(intervalfile, 'r') as i:
     interval_list = [x.split('\t')[0] for x in i]
 
