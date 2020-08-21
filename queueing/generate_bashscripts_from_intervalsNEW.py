@@ -7,17 +7,17 @@ with open(intervalfile, 'r') as i:
 
 
 for interval in interval_list:
-    with open('sh/' + interval + '.sh', 'w') as o:
+    with open('sh_jointvarcall/' + interval + '.sh', 'w') as o:
         o.write('#!/bin/bash\n~/00_software/gatk-4.1.1.0/gatk --java-options "-Xmx4g" GenotypeGVCFs \
--R /home/sam/chapter_01_demography/refgenome/ncbi-genomes-2019-10-21/GCA_003314715.1_Tur_tru_Illumina_hap_v1_genomic.fna \
--V gendb://02_GenomicsDB \
+-R /home/sam/Delphine_data/reference/ncbi-genomes-2020-07-28/GCA_011762595.1_mTurTru1.mat.Y_genomic.fna \
+-V gendb://GenomicsDB \
 -L {} \
 --tmp-dir ./tmp \
 -G StandardAnnotation -G AS_StandardAnnotation -G StandardHCAnnotation \
 -verbosity INFO \
 --include-non-variant-sites \
--O ./03_joint_varcall/{}.vcf.gz \n\
-vcftools --gzvcf ./03_joint_varcall/{}.vcf.gz --max-missing-count 182 --recode --stdout | gzip > ./04_min1ind/min1.{}.vcf.gz &'.format(interval, interval, interval, interval))
+-O ./04_joint_varcall/{}.vcf.gz \n\
+vcftools --gzvcf ./04_joint_varcall/{}.vcf.gz --max-missing-count 183 --recode --stdout | gzip > ./05_min1ind_DP5/min1.{}.vcf.gz &'.format(interval, interval, interval, interval))
 
 
 
