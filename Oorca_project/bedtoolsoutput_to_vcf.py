@@ -31,6 +31,6 @@ with open('Oorca.vcf', 'w') as vcfout, open(sys.argv[1], 'r') as infile:
 
         if Ttru_REF != 'N':
             vcfout.write('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n'.format(
-                Ttru_CHROM, Ttru_POS, Oorca_ID, Ttru_REF, Oorca_ALT, '.', '.', '.', 'GT', Oorca_GT
+                Ttru_CHROM.split('_')[0], Ttru_POS, Oorca_ID, Ttru_REF, Oorca_ALT, '.', '.', '.', 'GT', Oorca_GT
             ))
 
