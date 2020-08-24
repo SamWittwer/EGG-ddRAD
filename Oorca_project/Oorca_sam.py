@@ -28,6 +28,7 @@
 #                        '{}\t{}\t{}\t{}\n'.format(Oorca_startCHROM, Oorca_startPOS + POSaddition - 1, Oorca_startPOS + POSaddition,
 #                                                  '{}:{}:{}:REV'.format(Ttru_startCHROM, Ttru_startPOS + len(linelist[9]) - POSaddition, revcompl(singlebase))))
 
+import sys
 
 class SAMread:
     def __init__(self, SAMline):
@@ -73,7 +74,7 @@ class SAMread:
                                                                                       self.singlebase)))
 
 
-with open('Tursiops_to_Oorca.sort.sam', 'r') as infile, open('debug.txt', 'w') as d:
+with open(sys.argv[1], 'r') as infile, open('debug.txt', 'w') as d:
     for line in infile:
         a = SAMread(line)
         #d.write('{},{},{},{}\n'.format(a.alignmentbit, a.aligned, a.linelist[9], a.readsequence))
