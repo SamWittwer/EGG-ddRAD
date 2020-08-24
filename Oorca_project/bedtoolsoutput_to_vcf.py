@@ -1,4 +1,6 @@
-with open('Oorca.vcf', 'w') as vcfout, open('oorca_ttru.bed', 'r') as infile:
+import sys
+
+with open('Oorca.vcf', 'w') as vcfout, open(sys.argv[1], 'r') as infile:
     vcfout.write('##fileformat=VCFv4.2\n')
     vcfout.write('#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tOorca\n')
     basedict = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N'}
