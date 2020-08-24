@@ -57,7 +57,7 @@ with open(sys.argv[1]) as v:
 
             counter += 1
             if counter % 10000 == 0:
-                print counter
+                print(counter)
             linelist = line.strip().split('\t')
             #print linelist
             if locusstart:
