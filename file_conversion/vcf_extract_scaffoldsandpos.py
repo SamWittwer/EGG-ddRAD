@@ -1,7 +1,8 @@
 ## this script takes a vcf file, looks for continuous sequences in it
 ## and saves them as fasta
+import sys
 
-with open('MQ0.1_persite80_6popsthreshold_Q30_DP05_MM50_biallelic_noindel_AUSTRALISFINAL.vcf', 'r') as vcf:
+with open(sys.argv[1], 'r') as vcf:
     sequenceLoL = []
     for i, line in enumerate(vcf):
         if line.startswith('#CHROM'):
@@ -40,7 +41,7 @@ for i, entry in enumerate(sequenceLoL):
             currentfasta = '{}_{}'.format(entry[0], entry[1])
             fastareaddict[currentfasta] = [entry[2]]
 
-with open('Tursiops_ddRAD_loci.fasta', 'w') as o:
+with open(sys.argv[2], 'w') as o:
     for key in fastareaddict:
         if len(fastareaddict[key]) > 25:
             o.write('>{}\n{}\n'.format(key, ''.join(fastareaddict[key])))
