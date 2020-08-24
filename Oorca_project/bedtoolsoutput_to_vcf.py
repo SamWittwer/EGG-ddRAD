@@ -5,7 +5,7 @@ with open('Oorca.vcf', 'w') as vcfout, open(sys.argv[1], 'r') as infile:
     vcfout.write('#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\tOorca\n')
     basedict = {'A': 'T', 'T': 'A', 'G': 'C', 'C': 'G', 'N': 'N'}
     for line in infile:
-        #print line
+        print(line)
         linespl = line.strip().split('\t')
         Oorca_base = linespl[1].upper()
 
