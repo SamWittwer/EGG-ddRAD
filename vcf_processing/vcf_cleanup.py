@@ -18,6 +18,10 @@ def processind(indstring, gt, ad, dp, gq, pl):
 
 for line in i:
     if line.startswith('#'):
+        if line.startswith('##FORMAT=<ID=AD'):
+            # add the allele balance FORMAT tag to the VCF header
+            # allele balance formula from: https://www.biostars.org/p/43709/
+            o.write('##FORMAT=<ID=AB,Number=1,Type=Float,Description="Allele balance via python script, AB=(Ref/(Ref+ALT))\n')
         o.write(line)
     else:
         linespl = line.strip().split('\t')
