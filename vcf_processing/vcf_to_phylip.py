@@ -30,8 +30,9 @@ def partitionind(indaslist, partitionlength = 1000):
         returnlist.append(''.join(indaslist) + '\n')
     return returnlist
 
+import gzip
 
-with open(sys.argv[1]) as v:
+with gzip.open(sys.argv[1], 'rb') as v:
     ambiguitydict = {'A': {'A': 'A', 'C': 'M', 'G': 'R', 'T': 'W', 'N': 'N'},
                      'C': {'A': 'M', 'C': 'C', 'G': 'S', 'T': 'Y', 'N': 'N'},
                      'G': {'A': 'R', 'C': 'S', 'G': 'G', 'T': 'K', 'N': 'N'},
@@ -39,10 +40,12 @@ with open(sys.argv[1]) as v:
                      'N': {'A': 'N', 'C': 'N', 'G': 'N', 'T': 'N', 'N': 'N'}}
     counter = 0
 
+
     for lineno, line in enumerate(v):
         #print line
         #if lineno%1000 == 0:
         #    print lineno
+        line = line.decode('UTF-8')
 
         if line.startswith('#CHROM'):
             #extract individual names from last header line
